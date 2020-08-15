@@ -1,0 +1,24 @@
+<html>
+    <head>
+
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+        
+            $('#button').click(function(e) {  
+                var inputvalue = $("#input").val();
+                window.location.replace("http://127.0.0.1:8080/hello?name="+inputvalue);
+        
+            });
+        });
+    </script>
+
+    </head>
+
+    <body>
+           <input type="text" value="11" id="input"> 
+           <button type="button" id="button">Click Me!</button>
+    </body>
+
+</html>

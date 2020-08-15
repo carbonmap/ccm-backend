@@ -1,7 +1,8 @@
 from flask import (
     Flask,
     request,
-    send_from_directory
+    send_from_directory,
+    render_template
 )
 from flask_cors import CORS
 
@@ -13,8 +14,7 @@ CORS(app)
 # Example of a simple page, here at out homepage, as signified by the "/" path
 @app.route('/')
 def hello_world():
-    return "Hello world!"
-
+    return render_template("login.html")
 
 # Example of using parameters in the url, which may be used for finding entities
 @app.route('/hello')
