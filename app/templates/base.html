@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Cambridge Carbon Map</title>
     <meta name="author" content="Cambridge Carbon Map">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bulma.css') }}">
 </head>
 
 <body>
@@ -53,6 +53,27 @@
             </div>
         </div>
     </section>
+    <script>
+        const passwordInput = document.getElementById('password');
+        const togglePasswordButton = document.getElementById('toggle-password');
+    
+        togglePasswordButton.addEventListener('click', togglePassword);
+    
+        function togglePassword() {
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            togglePasswordButton.textContent = 'Hide password';
+            togglePasswordButton.setAttribute('aria-label',
+            'Hide password.');
+        } else {
+            passwordInput.type = 'password';
+            togglePasswordButton.textContent = 'Show password';
+            togglePasswordButton.setAttribute('aria-label',
+            'Show password as plain text. ' +
+            'Warning: this will display your password on the screen.');
+        }
+        }
+    </script>
 </body>
 
 </html>
