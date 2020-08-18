@@ -14,13 +14,14 @@
         <form method="POST" action="/login">
             <div class="field">
                 <div class="control">
-                    <input class="input is-large" type="email" name="email" placeholder="Your Email" autofocus="">
+                    <label for="email">Email</label>
+                    <input class="input is-large" type="email" id="email" autofocus="" required>
                 </div>
             </div>
-
             <div class="field">
                 <div class="control">
-                    <input class="input is-large" type="password" name="password" placeholder="Your Password">
+                    <label for="password">Password</label>
+                    <input class="input is-large" type="password" id="password" autocomplete="current-password" required>
                 </div>
             </div>
             <div class="field">

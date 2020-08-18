@@ -2,7 +2,7 @@
 
 {% block content %}
 <div class="column is-4 is-offset-4">
-    <h3 class="title">register</h3>
+    <h3 class="title">Register</h3>
     <div class="box">
         {% with messages = get_flashed_messages() %}
         {% if messages %}
@@ -14,19 +14,22 @@
         <form method="POST" action="/register">
             <div class="field">
                 <div class="control">
-                    <input class="input is-large" type="email" name="email" placeholder="Email" autofocus="">
+                    <label for="email">Email</label>
+                    <input class="input is-large" type="email" id="email" autofocus="" required>
                 </div>
             </div>
 
             <div class="field">
                 <div class="control">
-                    <input class="input is-large" type="text" name="name" placeholder="Name" autofocus="">
+                    <label for="name">Name</label>
+                    <input class="input is-large" type="text" id="name" autofocus="" required>
                 </div>
             </div>
 
             <div class="field">
                 <div class="control">
-                    <input class="input is-large" type="password" name="password" placeholder="Password">
+                    <label for="password">Password</label>
+                    <input class="input is-large" type="password" id="password" autocomplete="new-password" required>
                 </div>
             </div>
 
