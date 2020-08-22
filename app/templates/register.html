@@ -12,17 +12,43 @@
         {% endif %}
         {% endwith %}
         <form method="POST" action="/register">
+
             <div class="field">
                 <div class="control">
-                    <label for="email">Email</label>
-                    <input class="input is-large" type="email" id="email" autofocus="" required>
+                    <label for="forename">Forename</label>
+                    <input class="input is-large" type="text" name="forename" id="forename" autofocus="" required>
                 </div>
             </div>
 
             <div class="field">
                 <div class="control">
-                    <label for="name">Name</label>
-                    <input class="input is-large" type="text" id="name" autofocus="" required>
+                    <label for="surname">Surname</label>
+                    <input class="input is-large" type="text" name="surname" id="surname" autofocus="" required>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="control">
+                    <label for="org">Organisation</label>
+                    <input class="input is-large" type="text" name="org" id="org" required>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="control">
+                    <label for="user_type">Type of User</label>
+                    <select class="input is-large" name="user_type" id="user_type" required>
+                        <option>Academic</option>
+                        <option>Industry</option>
+                        <option>Council</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="control">
+                    <label for="email">Email</label>
+                    <input class="input is-large" type="email" id="email" required>
                 </div>
             </div>
 
@@ -31,6 +57,7 @@
                     <label for="password">Password</label>
                     <button id="toggle-password" type="button" aria-label="Show password as plain text. Warning: this will display your password on the screen.">Show password</button>
                     <input class="input is-large" type="password" id="password" autocomplete="new-password" required>
+                    <meter max="4" id="password-strength-meter"></meter>
                 </div>
             </div>
 
