@@ -59,6 +59,27 @@ def logout():
     logout_user()
     return redirect(url_for("main.index"))
 
+
+@auth.route("/admin", methods=["POST"])
+def admin():
+    db = "C:/Users/Jeevs/ccm-backend/app/db.sqlite"
+    table = "user"
+    email = request.form.get("email")
+    user = User.query.filter_by(email=email).first()
+    if user:
+        if request.form["action"] == "activate":
+            updateSqliteTable(db, table, email, "Y")
+            flash("Admin privileges successfully added to " + email)
+            return redirect(url_for("auth.admin"))
+        else:
+            updateSqliteTable(db, table, email, "N")
+            flash("Admin privileges successfully removed from " + email)
+            return redirect(url_for("auth.admin"))
+    else:
+        flash("The given email address does not match any accounts")
+        return redirect(url_for("auth.admin"))
+
+"""
 @auth.route("/admin", methods=["POST"])
 def admin():
     db = "db.sqlite"
@@ -66,9 +87,10 @@ def admin():
     email = request.form.get("email")
     user = User.query.filter_by(email=email).first()
     if user:
-        updateSqliteTable(db, table, email)
+        updateSqliteTable("C:/Users/Jeevs/ccm-backend/app/db.sqlite", "user", "jeevan.bhoot@yahoo.com", "Y")
         flash("Admin privileges successfully added to " + email)
         return redirect(url_for("auth.admin"))
     else:
         flash("The given email address does not match any accounts")
         return redirect(url_for("auth.admin"))
+"""

@@ -11382,3 +11382,15 @@ meter[value="1"]::-moz-meter-bar { background: red; }
 meter[value="2"]::-moz-meter-bar { background: yellow; }
 meter[value="3"]::-moz-meter-bar { background: orange; }
 meter[value="4"]::-moz-meter-bar { background: green; }
+
+.button.is-green {
+  background-color: greenyellow;
+  border-color: transparent;
+  color: #fff;
+}
+
+.button.is-red {
+  background-color: red;
+  border-color: transparent;
+  color: #fff;
+}

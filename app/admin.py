@@ -1,12 +1,12 @@
 import sqlite3
 
-def updateSqliteTable(database, table, email):
+def updateSqliteTable(database, table, email, flag):
     try:
         sqliteConnection = sqlite3.connect(database)
         cursor = sqliteConnection.cursor()
         print("Connected to SQLite")
 
-        cursor.execute("UPDATE " + table + " SET admin = 'Y' WHERE email = '" + email + "'")
+        cursor.execute("UPDATE " + table + " SET admin = '" + flag + "' WHERE email = '" + email + "'")
         sqliteConnection.commit()
         print("Record Updated successfully ")
         cursor.close()
@@ -18,4 +18,4 @@ def updateSqliteTable(database, table, email):
             sqliteConnection.close()
             print("The SQLite connection is closed")
 
-updateSqliteTable("db.sqlite", "user", "jsb212@cam.ac.uk")
+updateSqliteTable("C:/Users/Jeevs/ccm-backend/app/db.sqlite", "user", "jsb212@cam.ac.uk", "Y")
