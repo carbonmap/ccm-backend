@@ -3,6 +3,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, logout_user, login_required
 from .models import User
 from . import db
+from .admin import updateSqliteTable
 
 auth = Blueprint("auth", __name__)
 
@@ -57,3 +58,17 @@ def register_post():
 def logout():
     logout_user()
     return redirect(url_for("main.index"))
+
+@auth.route("/admin", methods=["POST"])
+def admin():
+    db = "db.sqlite"
+    table = "user"
+    email = request.form.get("email")
+    user = User.query.filter_by(email=email).first()
+    if user:
+        updateSqliteTable(db, table, email)
+        flash("Admin privileges successfully added to " + email)
+        return redirect(url_for("auth.admin"))
+    else:
+        flash("The given email address does not match any accounts")
+        return redirect(url_for("auth.admin"))
