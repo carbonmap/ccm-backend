@@ -15,15 +15,8 @@
 
             <div class="field">
                 <div class="control">
-                    <label for="forename">Forename</label>
-                    <input class="input is-large" type="text" name="forename" id="forename" autofocus="" required>
-                </div>
-            </div>
-
-            <div class="field">
-                <div class="control">
-                    <label for="surname">Surname</label>
-                    <input class="input is-large" type="text" name="surname" id="surname" autofocus="" required>
+                    <label for="forename">Full Name</label>
+                    <input class="input is-large" type="text" name="name" id="name" autofocus="" required>
                 </div>
             </div>
 
@@ -48,7 +41,7 @@
             <div class="field">
                 <div class="control">
                     <label for="email">Email</label>
-                    <input class="input is-large" type="email" id="email" required>
+                    <input class="input is-large" type="email" name="email" id="email" required>
                 </div>
             </div>
 
@@ -56,7 +49,7 @@
                 <div class="control">
                     <label for="password">Password</label>
                     <button id="toggle-password" type="button" aria-label="Show password as plain text. Warning: this will display your password on the screen.">Show password</button>
-                    <input class="input is-large" type="password" id="password" autocomplete="new-password" required>
+                    <input class="input is-large" type="password" id="password" name="password" autocomplete="new-password" required>
                     <meter max="4" id="password-strength-meter"></meter>
                 </div>
             </div>

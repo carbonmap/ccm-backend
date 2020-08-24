@@ -32,11 +32,11 @@ def register():
 @auth.route("/register", methods=["POST"])
 def register_post():
 
-    forename = request.form.get("forename")
-    surname = request.form.get("surname")
+    name = request.form.get("name")
     org = request.form.get("org")
     user_type = request.form.get("user_type")
     email = request.form.get("email")
+    print(email)
     password = request.form.get("password")
 
     user = User.query.filter_by(email=email).first()
@@ -45,7 +45,7 @@ def register_post():
         flash("Email address already exists")
         return redirect(url_for("auth.register"))
 
-    new_user = User(forename=forename, surname=surname, org=org, user_type=user_type, email=email, password=generate_password_hash(password, method="sha256"))
+    new_user = User(name=name, org=org, user_type=user_type, email=email, password=generate_password_hash(password, method="sha256"), admin='N')
 
     db.session.add(new_user)
     db.session.commit()

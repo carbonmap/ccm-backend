@@ -10,4 +10,12 @@ def index():
 @main.route("/profile")
 @login_required
 def profile():
-    return render_template("profile.html", forename=current_user.forename, org=current_user.org)
+    return render_template("profile.html", name=current_user.name, org=current_user.org)
+
+@main.route("/admin")
+@login_required
+def admin():
+    if current_user.admin == "Y":
+        return render_template("admin.html")
+    else:
+        return render_template("index.html")

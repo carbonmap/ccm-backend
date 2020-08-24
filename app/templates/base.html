@@ -35,6 +35,13 @@
                                 Register
                             </a>
                             {% endif %}
+
+                            {% if current_user.is_authenticated  and current_user.admin == "Y"%}
+                            <a href="{{ url_for('main.admin') }}" class="navbar-item">
+                                Admin
+                            </a>
+                            {% endif %}
+                            
                             {% if current_user.is_authenticated %}
                             <a href="{{ url_for('auth.logout') }}" class="navbar-item">
                                 Logout
