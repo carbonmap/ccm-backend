@@ -17,5 +17,3 @@ def updateSqliteTable(database, table, email, flag):
         if (sqliteConnection):
             sqliteConnection.close()
             print("The SQLite connection is closed")
-
-updateSqliteTable("C:/Users/Jeevs/ccm-backend/app/db.sqlite", "user", "jsb212@cam.ac.uk", "Y")
