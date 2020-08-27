@@ -1,0 +1,7 @@
+The following geojsons have no corresponding jsons in the reporting entities folder:
+uk.ac.cam.cai.geojson
+uk.ac.cam.dow.geojson
+uk.ac.cam.jesus.geojson
+uk.ac.cam.queens.geojson
+uk.ac.cam.trin.geojson
+I included a blank field for the subentities for these colleges regardless ("subentities": [])
