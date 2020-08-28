@@ -17,4 +17,5 @@ def get_subentities(user_email_domain):
             data = json.load(f)
     except FileNotFoundError:
         return None
-    return data["features"][0]["properties"]["subentities"]
+    subentities = data["features"][0]["properties"].get("subentities")
+    return subentities
