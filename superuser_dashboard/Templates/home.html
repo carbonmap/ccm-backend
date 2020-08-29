@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Super-User Dashboard</title>
+
+    <!-- Javascript linking hmtl page to AJAX api -->
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"> </script>
+    <!-- Defines Javascript function which links the 'mybutton' click in the html to the flask '/SomeFunction' route -->
+    <script type=text/javascript> $(function() { $("#mybutton").click(function (event) { $.getJSON('/SomeFunction', { },
+    function(data) { }); return false; }); }); </script> 
+
+  </head>
+  <body>
+    <h1>
+        Super-User Dashboard
+    </h1>
+    <p>
+      Click this button to move the file from limbo folder to confirmed folder!
+      <input type = "button" id = "mybutton" value = "Move file" />
+    </p>
+    
+  </body>
+</html>
