@@ -4,4 +4,16 @@
 <h1 class="title">
   Welcome, {{ name }}!
 </h1>
+{%if subentities%}
+<h2 style="text-align:left;">
+  You have the following subentities:
+</h2>
+<ol>
+  {%for subentity in subentities%}
+    <li style="text-align:left;">{{subentity}}</li>
+  {%endfor%} 
+</ol> 
+{%else%}
+  <h2> You have no subentities yet :( </h2>
+{%endif%}
 {% endblock %}
