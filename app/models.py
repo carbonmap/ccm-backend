@@ -3,6 +3,12 @@ from . import db
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(1000))
+    org = db.Column(db.String(1000))
+    user_type = db.Column(db.String(1000))
     email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(100))
-    name = db.Column(db.String(1000))
+    admin = db.Column(db.String(100))
+    registered_on = db.Column(db.DateTime)
+    confirmed = db.Column(db.String(100))
+    confirmed_on = db.Column(db.DateTime)
