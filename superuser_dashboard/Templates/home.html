@@ -23,22 +23,45 @@
 
       List of the limbo files: 
 
-      <div>
-        {% for elem in limbo_list %}
-    
-            {{ elem }} <br>
-    
-        {% endfor %}
-    </div>
+      <div id="place_for_limbo"></div>
 
-    List of confirmed files:
+      List of confirmed files:
+    <div id="place_for_confirmed"></div>
 
-    <div>
-      {% for elem in confirmed_list %}
+<script>
+$("#mybutton").click(function(){
+    $.ajax({
+      url: "/ListLimbo",
+      type: "get",
+      success: function(response) {
+        $("#place_for_limbo").html(response);
+      },
+      error: function(xhr) {
+        //Do Something to handle error
+      }
+    });
+});
+</script>
+
+<script>
+  $("#mybutton").click(function(){
+      var text = $(this).val();
   
-          {{ elem }} <br>
-  
-      {% endfor %}
-  </div>    
+      $.ajax({
+        url: "/ListConfirmed",
+        type: "get",
+        data: {jsdata: text},
+        success: function(response) {
+          $("#place_for_confirmed").html(response);
+        },
+        error: function(xhr) {
+          //Do Something to handle error
+        }
+      });
+  });
+  </script>
+
+    
+    
   </body>
 </html>

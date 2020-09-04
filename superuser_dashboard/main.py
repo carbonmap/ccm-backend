@@ -7,12 +7,15 @@ limbo_path = "superuser_dashboard/limbo_state/"
 confirmed_path = "superuser_dashboard/confirmed_state/"
 file_name = "some_text.txt"
 
-limbo_list = os.listdir(limbo_path) #list of all the files limbo folder
-confirmed_list = os.listdir(confirmed_path) #list of all the files limbo folder
+limbo_list = os.listdir(limbo_path)  # list of all the files limbo folder
+confirmed_list = os.listdir(confirmed_path)  # list of all the files limbo folder
+
 
 @app.route("/")
 def home():
-    return render_template("home.html", limbo_list=limbo_list, confirmed_list=confirmed_list)
+    return render_template(
+        "home.html", limbo_list=limbo_list, confirmed_list=confirmed_list
+    )
 
 
 @app.route("/SomeFunction")
@@ -33,6 +36,21 @@ def SomeFunction():
 
     print("The text file has been moved")
     return "None"
+
+
+@app.route("/ListLimbo")
+def ListLimbo():
+    return render_template("limbo_list.html", limbo_list=os.listdir(limbo_path))
+    # return jsonify({'file': render_template('limbo_list.html', limbo_list = limbo_list)})
+
+
+@app.route("/ListConfirmed")
+def ListConfirmed():
+    return render_template(
+        "confirmed_list.html", confirmed_list=os.listdir(confirmed_path)
+    )
+    # return jsonify({'confirmedFiles': render_template('confirmed_list.html', confirmed_list = os.listdir(confirmed_path))})
+
 
 if __name__ == "__main__":
     app.run(debug=True)
