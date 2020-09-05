@@ -6,9 +6,9 @@ from flask_mail import Mail
 db = SQLAlchemy()
 mail = Mail()
 
+
 def create_app():
     app = Flask(__name__)
-
 
     app.config["SECRET_KEY"] = "9OLWxND4o83j4K4iuopO"
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///db.sqlite"
@@ -19,13 +19,13 @@ def create_app():
     app.config["DEBUG_TB_ENABLED"] = False
     app.config["DEBUG_TB_INTERCEPT_REDIRECTS"] = False
 
-    app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-    app.config['MAIL_PORT'] = 587
-    app.config['MAIL_USE_TLS'] = True
-    app.config['MAIL_USE_SSL'] = False
-    app.config['MAIL_USERNAME'] = "EMAIL"
-    app.config['MAIL_PASSWORD'] = "PASSWORD"
-    app.config['MAIL_DEFAULT_SENDER'] = "EMAIL"
+    app.config["MAIL_SERVER"] = "smtp.gmail.com"
+    app.config["MAIL_PORT"] = 587
+    app.config["MAIL_USE_TLS"] = True
+    app.config["MAIL_USE_SSL"] = False
+    app.config["MAIL_USERNAME"] = "EMAIL"
+    app.config["MAIL_PASSWORD"] = "PASSWORD"
+    app.config["MAIL_DEFAULT_SENDER"] = "EMAIL"
 
     db.init_app(app)
     mail.init_app(app)
@@ -41,9 +41,11 @@ def create_app():
         return User.query.get(int(user_id))
 
     from .auth import auth as auth_blueprint
+
     app.register_blueprint(auth_blueprint)
 
     from .main import main as main_blueprint
+
     app.register_blueprint(main_blueprint)
 
     return app

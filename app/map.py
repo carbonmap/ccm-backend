@@ -3,6 +3,7 @@ from flask_login import login_required, current_user
 
 map = Blueprint("map", __name__)
 
+
 @map.route("/map_view")
 def map_view():
     # TODO: 050920
@@ -16,14 +17,15 @@ def map_view():
     # This gets the list of entities from the url:
     list_of_expanded_entities = request.args.get("reveal")
 
-    primary_entities = None ### Function 1 on database
-    
-    displayed_subentities = None ### Function 2 on database for all relevant entities
+    primary_entities = None  ### Function 1 on database
+
+    displayed_subentities = None  ### Function 2 on database for all relevant entities
 
     # i.e. when the user first enters the map, the will have url .../mapview
     # This means displayed_subentities is empty and they only return primary_entities
 
     # Return list of entitiy that combines primary_entities and displayed_subentities
+
 
 @map.route("/popup_options")
 def popup_options():
@@ -39,23 +41,23 @@ def popup_options():
     # and, whether or not the current user can edit the entity (later on we will a button to do this)
 
     # For this last bit, you will have to check if the id is in the list returned by profile.my_entities
-    
+
     # The popup will send a request to a route of url .../popup_options?entity_id=uk.ac.cam.kings
     # Therefore, you can get the relevant entity with:
     entity_id = request.args.get("entity_id")
 
-    entity_name = None ### Function 4
-    entity_meta_data = None ### Function 5
-    
-    user_entities = None ### Send a request to .../my_entities which returns a list of entity ids the user has access to, and their permission to each
-    user_permission = None ### None/"emissions"/"metadata"
+    entity_name = None  ### Function 4
+    entity_meta_data = None  ### Function 5
+
+    user_entities = (
+        None
+    )  ### Send a request to .../my_entities which returns a list of entity ids the user has access to, and their permission to each
+    user_permission = None  ### None/"emissions"/"metadata"
 
     # Return soemthing like this:
-    return (
-        {
-            "entity_name": entity_name,
-            "entity_metadata": entity_metadata,
-            "user_permission": user_permission
-        }
-    )
+    return {
+        "entity_name": entity_name,
+        "entity_metadata": entity_metadata,
+        "user_permission": user_permission,
+    }
     # The front end can then receive this and produce a popup with the name and metadata

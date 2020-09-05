@@ -4,7 +4,6 @@ from .models import (
     EntityProperty,
     EntityToSubentity,
     UserToEntity,
-    SuperUser
+    SuperUser,
 )
 from . import db
-

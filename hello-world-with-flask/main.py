@@ -32,16 +32,19 @@ def getGeojson(path):
 def getDatajson(path):
     return send_from_directory("reporting_entities", path)
 
+
 @app.route("/login", methods=["POST"])
 def login():
     loginData = request.get_json()
-    email = loginData['email']
-    password = loginData['password']
+    email = loginData["email"]
+    password = loginData["password"]
     print(email, password)
     if len(password) > 24:
-        return '{"Response" : "Password is greater than 24 chars"}' #just an example of logic that can be used to determine the server response.
-    #perform hash comparison here and return appropriate response
-    
+        return (
+            '{"Response" : "Password is greater than 24 chars"}'
+        )  # just an example of logic that can be used to determine the server response.
+    # perform hash comparison here and return appropriate response
+
     return '{"Response" : "OK"}'
 
 

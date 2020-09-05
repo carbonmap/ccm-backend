@@ -4,12 +4,13 @@ from flask_mail import Message
 from .decorators import confirm_required
 
 
-
 main = Blueprint("main", __name__)
+
 
 @main.route("/")
 def index():
     return render_template("index.html")
+
 
 @main.route("/admin")
 @login_required
