@@ -40,7 +40,6 @@ def register_post():
     org = request.form.get("org")
     user_type = request.form.get("user_type")
     email = request.form.get("email")
-    print(email)
     password = request.form.get("password")
 
     user = User.query.filter_by(email=email).first()
@@ -62,7 +61,7 @@ def register_post():
 
     login_user(new_user)
 
-    flash('A confirmation email has been sent via email', 'success')
+    flash('A confirmation link has been sent via email', 'success')
     return redirect(url_for("main.index"))
 
 @auth.route("/logout")
@@ -126,3 +125,35 @@ def resend_confirmation():
     send_email(current_user.email, subject, html)
     flash('A new confirmation email has been sent', 'success')
     return redirect(url_for('auth.unconfirmed'))
+
+@auth.route("/forgot_password")
+def forgot_password():
+    return render_template("forgot_password.html")
+
+@auth.route("/forgot_password", methods=["POST"])
+def forgot_password_post():
+    db = "C:/Users/Jeevs/ccm-backend/app/db.sqlite"
+    table = "user"
+    email = request.form.get("email")
+    user = User.query.filter_by(email=email).first()
+    if user:
+        token = generate_confirmation_token(email)
+        confirm_url = url_for('auth.confirm_email', token=token, _external=True)
+        html = render_template('retrieval.html', confirm_url=confirm_url)
+        subject = "Change your password"
+        send_email(email, subject, html)
+        flash('A retrieval link has been sent via email', 'success')
+        return redirect(url_for("main.index"))
+
+@auth.route("/forgot/<token>")
+def confirm_forgot_email(token):
+    try:
+        email = confirm_token(token)
+    except:
+        flash('The retrieval link is invalid or has expired', 'danger')
+    user = User.query.filter_by(email=email).first_or_404()
+    return redirect(url_for('auth.change_password'))
+
+@auth.route("/change_password")
+def change_password():
+    return render_template("index.html")
