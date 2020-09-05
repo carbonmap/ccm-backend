@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, jsonify
 import os, os.path
+import shutil
 
 app = Flask(__name__)
 
@@ -18,38 +19,30 @@ def home():
     )
 
 
+@app.route("/ShowFiles")
+def ShowFiles():
+    return render_template("show_files.html", limbo_list=os.listdir(limbo_path), confirmed_list=os.listdir(confirmed_path))
+    
+
 @app.route("/SomeFunction")
 def SomeFunction():
     # function checks which folder the file is in, then moves it to the other folder
 
     if os.path.isfile(os.path.join(limbo_path, file_name)) == True:
-        os.rename(
+        shutil.move(
             os.path.join(limbo_path, file_name),
             os.path.join(confirmed_path, file_name),
         )
 
     elif os.path.isfile(os.path.join(confirmed_path, file_name)) == True:
-        os.rename(
+        shutil.move(
             os.path.join(confirmed_path, file_name),
             os.path.join(limbo_path, file_name),
         )
 
     print("The text file has been moved")
-    return "None"
-
-
-@app.route("/ListLimbo")
-def ListLimbo():
-    return render_template("limbo_list.html", limbo_list=os.listdir(limbo_path))
-    # return jsonify({'file': render_template('limbo_list.html', limbo_list = limbo_list)})
-
-
-@app.route("/ListConfirmed")
-def ListConfirmed():
-    return render_template(
-        "confirmed_list.html", confirmed_list=os.listdir(confirmed_path)
-    )
-    # return jsonify({'confirmedFiles': render_template('confirmed_list.html', confirmed_list = os.listdir(confirmed_path))})
+    
+    return ShowFiles()
 
 
 if __name__ == "__main__":

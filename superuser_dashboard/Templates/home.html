@@ -6,10 +6,7 @@
 
     <!-- Javascript linking hmtl page to AJAX api -->
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"> </script>
-    <!-- Defines Javascript function which links the 'mybutton' click in the html to the flask '/SomeFunction' route -->
-    <script type=text/javascript> $(function() { $("#mybutton").click(function (event) { $.getJSON('/SomeFunction', { },
-    function(data) { }); return false; }); }); </script>
-    
+   
   </head>
   <body>
     <h1>
@@ -20,42 +17,23 @@
       <input type = "button" id = "mybutton" value = "Move file" />
     </p>
 
+    <div id="place_for_files"></div> 
 
-      List of the limbo files: 
-
-      <div id="place_for_limbo"></div>
-
-      List of confirmed files:
-    <div id="place_for_confirmed"></div>
-
+<!-- Load lists of files on page load -->
 <script>
-$("#mybutton").click(function(){
-    $.ajax({
-      url: "/ListLimbo",
-      type: "get",
-      success: function(response) {
-        $("#place_for_limbo").html(response);
-      },
-      error: function(xhr) {
-        //Do Something to handle error
-      }
-    });
-});
+  $.ajax({ url: "/ShowFiles",
+      success: function(response){
+        $("#place_for_files").html(response);
+      }});
 </script>
 
+<!-- Move file on click and re-render the lists of files -->
 <script>
   $("#mybutton").click(function(){
-      var text = $(this).val();
-  
-      $.ajax({
-        url: "/ListConfirmed",
-        type: "get",
-        data: {jsdata: text},
+     $.ajax({
+        url: "/SomeFunction",
         success: function(response) {
-          $("#place_for_confirmed").html(response);
-        },
-        error: function(xhr) {
-          //Do Something to handle error
+          $("#place_for_files").html(response);
         }
       });
   });
