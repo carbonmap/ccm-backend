@@ -1,3 +1,7 @@
+# TODO: 050920
+# Update this bad boy to whatever is on the doc now
+# Create a way (a route on the app) to move all of these onto the database
+
 monster_query = """
 CREATE TABLE reporting_entities(
    id              STRING(1000) NOT NULL PRIMARY KEY

@@ -7,3 +7,4 @@ from .models import (
     SuperUser
 )
 from . import db
+
