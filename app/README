@@ -1,4 +1,17 @@
-#
-# All the static content should be dumped here.
-# CSS, Javascript functions, logos, etc...
-#
+db.create_all(app=create_app()) in Python REPL to create db and app.
+
+Enter email address in app.config['MAIL_USERNAME'] =  and app.config['MAIL_DEFAULT_SENDER'] = in __init__.py
+Enter email password in app.config['MAIL_PASSWORD'] = in __init__.py
+If using a gmail account with two factor authentication, create an 'app password', which bypasses the 2FA process.
+
+Linux:
+export FLASK_APP=app
+export FLASK_DEBUG=1
+
+Windows:
+$env:FLASK_APP = "app"
+$env:FLASK_DEBUG=1
+
+Whilst in ccm-backend folder, enter:
+flask run
+to deploy web app on local host.
