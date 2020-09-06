@@ -6,6 +6,8 @@ from flask_mail import Mail
 db = SQLAlchemy()
 mail = Mail()
 
+LOAD_DUMMY_DATA = True
+from .populate_databases import monster_query
 
 def create_app():
     app = Flask(__name__)
@@ -33,19 +35,30 @@ def create_app():
     login_manager = LoginManager()
     login_manager.login_view = "auth.login"
     login_manager.init_app(app)
-
-    from .models import User
+    
+    from .models import (
+        User,
+        ReportingEntity,
+        EntityProperty,
+        EntityToSubentity,
+        UserToEntity,
+        SuperUser
+    )
+    
+    db.create_all(app = app)
 
     @login_manager.user_loader
     def load_user(user_id):
         return User.query.get(int(user_id))
 
     from .auth import auth as auth_blueprint
+    from .main import main as main_blueprint
+    from .profile import profile as profile_blueprint
+    from .map import map as map_blueprint
 
     app.register_blueprint(auth_blueprint)
-
-    from .main import main as main_blueprint
-
     app.register_blueprint(main_blueprint)
+    app.register_blueprint(profile_blueprint)
+    app.register_blueprint(map_blueprint)
 
     return app

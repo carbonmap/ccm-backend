@@ -2,6 +2,10 @@
 # Update this bad boy to whatever is on the doc now
 # Create a way (a route on the app) to move all of these onto the database
 
+# TODO: remove table creation
+# TODO: change table names
+# TODO: update to document
+
 monster_query = """
 CREATE TABLE reporting_entities(
    id              STRING(1000) NOT NULL PRIMARY KEY
@@ -70,7 +74,5 @@ INSERT INTO user_to_entity(user_id,entity_id,role) VALUES ('jane_id','uk.ac.cam.
 INSERT INTO user_to_entity(user_id,entity_id,role) VALUES ('jane_id','uk.ac.cam.corpuschristi.cc3','metadata');
 INSERT INTO user_to_entity(user_id,entity_id,role) VALUES ('eve_id','uk.ac.cam.christ','metadata');
 INSERT INTO user_to_entity(user_id,entity_id,role) VALUES ('eve_id','uk.ac.cam.christ.c1','emission');
-
-
 
 """
