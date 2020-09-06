@@ -15,6 +15,7 @@ from .admin import updateSqliteTable
 import datetime
 from .email import generate_confirmation_token, confirm_token, send_email
 from .decorators import confirm_required
+import uuid
 
 auth = Blueprint("auth", __name__)
 
@@ -62,6 +63,7 @@ def register_post():
         return redirect(url_for("auth.register"))
 
     new_user = User(
+        id=str(uuid.uuid4()),
         name=name,
         org=org,
         user_type=user_type,
