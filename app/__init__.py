@@ -1,8 +1,9 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager 
+from flask_login import LoginManager
 
 db = SQLAlchemy()
+
 
 def create_app():
     app = Flask(__name__)
@@ -23,9 +24,15 @@ def create_app():
         return User.query.get(int(user_id))
 
     from .auth import auth as auth_blueprint
+
     app.register_blueprint(auth_blueprint)
 
     from .main import main as main_blueprint
+
     app.register_blueprint(main_blueprint)
+
+    from .superuser_dash import superuser_dashboard as superuser_blueprint
+
+    app.register_blueprint(superuser_blueprint)
 
     return app
