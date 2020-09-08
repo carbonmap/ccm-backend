@@ -21,7 +21,7 @@
 
 <!-- Load lists of files on page load -->
 <script>
-  $.ajax({ url: "/ShowFiles",
+  $.ajax({ url: "/showfiles",
       success: function(response){
         $("#place_for_files").html(response);
       }});
@@ -31,7 +31,7 @@
 <script>
   $("#mybutton").click(function(){
      $.ajax({
-        url: "/MoveFile",
+        url: "/movefile",
         success: function(response) {
           $("#place_for_files").html(response);
         }

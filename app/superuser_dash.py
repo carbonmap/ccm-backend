@@ -12,15 +12,15 @@ limbo_list = os.listdir(limbo_path)  # list of all the files limbo folder
 confirmed_list = os.listdir(confirmed_path)  # list of all the files limbo folder
 
 
-@superuser_dashboard.route("/Superuser_Dashboard")
+@superuser_dashboard.route("/superuser_dashboard")
 def super_dash():
     return render_template(
         "super_dash.html", limbo_list=limbo_list, confirmed_list=confirmed_list
     )
 
 
-@superuser_dashboard.route("/ShowFiles")
-def ShowFiles():
+@superuser_dashboard.route("/showfiles")
+def show_files():
     return render_template(
         "show_files.html",
         limbo_list=os.listdir(limbo_path),
@@ -28,7 +28,7 @@ def ShowFiles():
     )
 
 
-@superuser_dashboard.route("/MoveFile")
+@superuser_dashboard.route("/movefile")
 def Move():
     # function checks which folder the file is in, then moves it to the other folder
 
@@ -46,7 +46,7 @@ def Move():
 
     print("The text file has been moved")
 
-    return ShowFiles()
+    return show_files()
 
 
 if __name__ == "__main__":
