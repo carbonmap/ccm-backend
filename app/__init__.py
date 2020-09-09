@@ -2,6 +2,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_mail import Mail
+from flask_cors import CORS
 
 db = SQLAlchemy()
 mail = Mail()
@@ -11,6 +12,7 @@ from .populate_databases import monster_query
 
 def create_app():
     app = Flask(__name__)
+    CORS(app)
 
     app.config["SECRET_KEY"] = "9OLWxND4o83j4K4iuopO"
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///db.sqlite"
@@ -25,9 +27,9 @@ def create_app():
     app.config["MAIL_PORT"] = 587
     app.config["MAIL_USE_TLS"] = True
     app.config["MAIL_USE_SSL"] = False
-    app.config["MAIL_USERNAME"] = "EMAIL"
-    app.config["MAIL_PASSWORD"] = "PASSWORD"
-    app.config["MAIL_DEFAULT_SENDER"] = "EMAIL"
+    app.config["MAIL_USERNAME"] = "jeevan.bhoot@gmail.com"
+    app.config["MAIL_PASSWORD"] = "rgitwfupumphtgba"
+    app.config["MAIL_DEFAULT_SENDER"] = "jeevan.bhoot@gmail.com"
 
     db.init_app(app)
     mail.init_app(app)
