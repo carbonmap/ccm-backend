@@ -1,7 +1,10 @@
 from flask import Blueprint, render_template
 from flask_login import login_required, current_user
 from .models import ReportingEntity, EntityToSubentity, UserToEntity
+
+from .admin import sqliteExecute
 from . import db
+
 
 profile = Blueprint("profile", __name__)
 
@@ -24,6 +27,9 @@ def my_entities():
     # ]
 
     # This will be used by both the map entity dashboard, and the popup function (popup_options)
+    # DONE
+    user_entities = sqliteExecute(db, "SELECT entity_id,role FROM user_to_entity WHERE user_id = (%s)", (user_id))
+    return user_entities
 
 
 @profile.route("/add_entity")

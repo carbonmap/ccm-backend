@@ -1,6 +1,9 @@
 from flask import Blueprint, render_template
 from flask_login import login_required, current_user
 
+from .admin import sqliteExecute
+from . import db
+
 map = Blueprint("map", __name__)
 
 
@@ -17,14 +20,20 @@ def map_view():
     # This gets the list of entities from the url:
     list_of_expanded_entities = request.args.get("reveal")
 
-    primary_entities = None  ### Function 1 on database
+    primary_entities = sqliteExecute(db, "SELECT id FROM reporting_entities WHERE primary_display = 1")
+  ### Function 1 on database
 
-    displayed_subentities = None  ### Function 2 on database for all relevant entities
+    displayed_subentities = []
+    for ent in list_of_expanded_entities:
+        displayed_subentities.append(sqliteExecute(db, "SELECT subentity_id FROM entity_to_subentity WHERE entity_id = (%s)", (ent)))
+        ### Function 2 on database for all relevant entities
 
-    # i.e. when the user first enters the map, the will have url .../mapview
-    # This means displayed_subentities is empty and they only return primary_entities
+        # i.e. when the user first enters the map, the will have url .../mapview
+        # This means displayed_subentities is empty and they only return primary_entities
 
-    # Return list of entitiy that combines primary_entities and displayed_subentities
+        # Return list of entitiy that combines primary_entities and displayed_subentities
+    entities_to_view = primary_entities + displayed_subentities
+    return entities_to_view
 
 
 @map.route("/popup_options")
