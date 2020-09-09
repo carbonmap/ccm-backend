@@ -4,6 +4,8 @@ from flask_login import login_required, current_user
 from .admin import sqliteExecute
 from . import db
 
+from profile.py import my_entities
+
 map = Blueprint("map", __name__)
 
 
@@ -25,7 +27,7 @@ def map_view():
 
     displayed_subentities = []
     for ent in list_of_expanded_entities:
-        displayed_subentities.append(sqliteExecute(db, "SELECT subentity_id FROM entity_to_subentity WHERE entity_id = (%s)", (ent)))
+        displayed_subentities.append(sqliteExecute(db, "SELECT subentity_id FROM entity_to_subentity WHERE entity_id = %s'", (ent, )))
         ### Function 2 on database for all relevant entities
 
         # i.e. when the user first enters the map, the will have url .../mapview
@@ -55,11 +57,16 @@ def popup_options():
     # Therefore, you can get the relevant entity with:
     entity_id = request.args.get("entity_id")
 
-    entity_name = None  ### Function 4
-    entity_meta_data = None  ### Function 5
+    ### Function 6?
+    entity_name = sqliteExecute(db, "SELECT name FROM reporting_entities WHERE id = %s'", (entity_id, ))
 
+    ### Function 4
+    entity_meta_data = sqliteExecute(db, "SELECT numb_value FROM entity_to_subentity WHERE is_numeric=1 AND id=%s'", (entity_id, )) 
+                        + sqliteExecute(db, "SELECT string_value FROM entity_to_subentity WHERE is_numeric=0 AND id=%s'", (entity_id, ))
+
+    ### Function 3?
     user_entities = (
-        None
+        my_entities
     )  ### Send a request to .../my_entities which returns a list of entity ids the user has access to, and their permission to each
     user_permission = None  ### None/"emissions"/"metadata"
 

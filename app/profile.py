@@ -28,7 +28,7 @@ def my_entities():
 
     # This will be used by both the map entity dashboard, and the popup function (popup_options)
     # DONE
-    user_entities = sqliteExecute(db, "SELECT entity_id,role FROM user_to_entity WHERE user_id = (%s)", (user_id))
+    user_entities = sqliteExecute(db, "SELECT entity_id,role FROM user_to_entity WHERE user_id = %s'", (user_id, ))
     return user_entities
 
 
