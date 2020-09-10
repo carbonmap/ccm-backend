@@ -28,18 +28,22 @@ def login():
 
 @auth.route("/login", methods=["POST"])
 def login_post():
-    email = request.form.get("email")
-    password = request.form.get("password")
-    remember = True if request.form.get("remember") else False
+    email = request.json["email"]
+    password = request.json["password"]
+    #remember = True if request.form.get("remember") else False
 
     user = User.query.filter_by(email=email).first()
 
     if not user or not check_password_hash(user.password, password):
-        flash("Invalid email address or password.")
-        return redirect(url_for("auth.login"))
+        #flash("Invalid email address or password.")
+        #return redirect(url_for("auth.login"))
+        status=False
+        return jsonify({'result': status})
 
-    login_user(user, remember=remember)
-    return redirect(url_for("main.profile"))
+    login_user(user)
+    session['logged_in'] = True
+    status=True
+    return jsonify({'result': status})
 
 
 @auth.route("/register")
