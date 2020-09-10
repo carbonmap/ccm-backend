@@ -38,7 +38,8 @@ def login_post():
         return redirect(url_for("auth.login"))
 
     login_user(user, remember=remember)
-    return redirect(url_for("main.profile"))
+    # return redirect(url_for("main.profile"))
+    return redirect(url_for("profile.welcome"))
 
 
 @auth.route("/register")
@@ -63,7 +64,7 @@ def register_post():
         return redirect(url_for("auth.register"))
 
     new_user = User(
-        id=str(uuid.uuid4()),
+        id=str(uuid.uuid4().int), #(Phil)
         name=name,
         org=org,
         user_type=user_type,
@@ -71,7 +72,8 @@ def register_post():
         password=generate_password_hash(password, method="sha256"),
         admin="N",
         registered_on=datetime.datetime.now(),
-        confirmed="N",
+        # confirmed="N", (Phil)
+        confirmed="Y",
         confirmed_on=datetime.datetime.now(),
     )
 
@@ -82,7 +84,7 @@ def register_post():
     confirm_url = url_for("auth.confirm_email", token=token, _external=True)
     html = render_template("activate.html", confirm_url=confirm_url)
     subject = "Please confirm your email"
-    send_email(new_user.email, subject, html)
+    # send_email(new_user.email, subject, html) # need more secure method of sending email to gmail addresses (Phil)
 
     login_user(new_user)
 

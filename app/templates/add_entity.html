@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="column is-4 is-offset-4">
+    <h3 class="title">Add Entity</h3>
+    <div class="box">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="notification is-danger">
+                {{ messages[0] }}
+            </div>
+        {% endif %}
+        {% endwith %}
+        <form method="POST" action="/add_entity">
+            <div class="field">
+                <div class="control">
+                    <label for="human_name">Human name</label>
+                    <input class="input is-large" type="human_name" id="human_name" name="human_name" autofocus="" required>
+                </div>
+            </div>
+            <div class="field">
+                <label class="checkbox">
+                    <input type="checkbox" name="is_sub" id="is_sub">
+                    Is subentity?
+                </label>
+            </div>  
+            <div class="select">
+                <select name="primaries">
+                    {% for value, key in list_entities %}
+                        <option value="{{value}}">{{key}}</option>
+                    {% endfor %}
+                </select>
+            </div>            
+            <div class="field">
+                <div class="control">
+                    <label for="new_id">New ID</label>
+                    <input class="input is-large" type="new_id" id="new_id" name="new_id" autofocus="" required>
+                </div>
+            </div>
+            <div class="field">
+                <div class="control">
+                    <label for="location">Location</label>
+                    <input class="input is-large" type="location" id="location" name="location" autofocus="" required>
+                </div>
+            </div>
+            <button class="button is-block is-info is-large is-fullwidth">Add Entity</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

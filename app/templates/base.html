@@ -23,13 +23,22 @@
                             <a href="{{ url_for('main.index') }}" class="navbar-item">
                                 Home
                             </a>
-                            {% if current_user.is_authenticated and current_user.confirmed == "Y" %}
-                            <a href="{{ url_for('main.profile') }}" class="navbar-item">
+                            {% if current_user.confirmed == "Y" %}
+                            {# <a href="{{ url_for('main.profile') }}" class="navbar-item"> #}
+                            <a href="{{ url_for('profile.welcome') }}" class="navbar-item">
                                 Profile
                             </a>
                             {% elif current_user.is_authenticated %}
                             <a href="{{ url_for('auth.unconfirmed') }}" class="navbar-item">
                                 Confirm
+                            </a>
+                            {% endif %}
+                            {% if profile_path %}
+                            <a href="{{ url_for('profile.add_entity') }}" class="navbar-item">
+                                Add Entity
+                            </a>
+                            <a href="{{ url_for('profile.my_entities') }}" class="navbar-item">
+                                My Entities
                             </a>
                             {% endif %}
                             {% if not current_user.is_authenticated %}
@@ -40,13 +49,11 @@
                                 Register
                             </a>
                             {% endif %}
-
                             {% if current_user.is_authenticated  and current_user.admin == "Y" and current_user.confirmed == "Y"%}
                             <a href="{{ url_for('main.admin') }}" class="navbar-item">
                                 Admin
                             </a>
                             {% endif %}
-                            
                             {% if current_user.is_authenticated %}
                             <a href="{{ url_for('auth.logout') }}" class="navbar-item">
                                 Logout

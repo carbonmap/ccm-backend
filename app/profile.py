@@ -1,9 +1,23 @@
-from flask import Blueprint, render_template
+from flask import (
+    Blueprint, 
+    request, 
+    render_template, 
+    flash,
+    url_for,
+    redirect
+    )
 from flask_login import login_required, current_user
 from .models import ReportingEntity, EntityToSubentity, UserToEntity
 from . import db
+import uuid
 
 profile = Blueprint("profile", __name__)
+
+
+@profile.route("/welcome")
+@login_required
+def welcome():
+    return render_template("welcome.html", name=current_user.name, profile_path=True)
 
 
 @profile.route("/my_entities")
@@ -24,6 +38,7 @@ def my_entities():
     # ]
 
     # This will be used by both the map entity dashboard, and the popup function (popup_options)
+    return render_template("my_entities.html")
 
 
 @profile.route("/add_entity")
@@ -38,8 +53,9 @@ def add_entity():
     # Geohash (entered in for now, in the next version this will be a point selection on the map)
 
     # If it is a subentity, the final id is actually entity_id.id, otherwise it's just id
-
-    return render_template("add_entity.html")
+    list_entities = [('my house', 'House 1'), ('your house', 'House 2'), ('Donald Trump house', 'House 3')]
+    
+    return render_template("add_entity.html",list_entities=list_entities)
 
 
 @profile.route("/add_entity", methods=["POST"])
@@ -53,14 +69,15 @@ def add_entity_post():
     # Enter all the right entity fields into reporting_entity (keep status as "accepted" for now, and keep OSM ID null)
     # If new entity is a subentity, enter the right row values into entity_to_subentity table
     # Similarily add a row to use_to_entity
-
+    is_sub = False    
     human_name = request.form.get("human_name") # String from textfield
     is_sub = request.form.get("is_sub") # Boolean from the checkbox
-    new_id = request.form.get("new_id") # String from textfield
+    # new_id = request.form.get("new_id") # String from textfield
+    new_id = str(uuid.uuid4().int) # At the moment generate unique id for new entity rather than accept user's id
     location = request.form.get("location") # String from textfield
 
     # All of these are required, so let's flash when one isn't given
-    if not all([human_name, is_sub, new_id, location]):
+    if not all([human_name, new_id, location]):
         flash("Please fill in form properly")
         return redirect(url_for("profile.add_entity"))
 
@@ -99,7 +116,8 @@ def add_entity_post():
         db.session.commit()
 
     # What else is required?
-    pass
+    # pass
+    return redirect(url_for("profile.welcome"))
 
 
 @profile.route("/edit_entity_metadata", methods=["POST"])
