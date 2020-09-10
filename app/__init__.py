@@ -7,7 +7,6 @@ db = SQLAlchemy()
 mail = Mail()
 
 LOAD_DUMMY_DATA = True
-from .populate_databases import monster_query
 
 def create_app():
     app = Flask(__name__)

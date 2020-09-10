@@ -40,10 +40,13 @@ def sqliteExecute(database, instruction):
     except sqlite3.Error as error:
         print("Failed to update sqlite database", error)
 
-    finally:
-        if (conn):
-            conn.close()
-            print("The SQLite connection is closed")
+    conn.close()
+    print("The SQLite connection is closed")
+
+    # finally:
+    #     if (conn):
+    #         conn.close()
+    #         print("The SQLite connection is closed")
 
 #Example instructions: 
 #

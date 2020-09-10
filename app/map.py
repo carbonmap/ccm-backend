@@ -4,7 +4,7 @@ from flask_login import login_required, current_user
 from .admin import sqliteExecute
 from . import db
 
-from profile.py import my_entities
+from .profile import my_entities
 
 map = Blueprint("map", __name__)
 
@@ -23,7 +23,7 @@ def map_view():
     list_of_expanded_entities = request.args.get("reveal")
 
     primary_entities = sqliteExecute(db, "SELECT id FROM reporting_entities WHERE primary_display = 1")
-  ### Function 1 on database
+    ### Function 1 on database
 
     displayed_subentities = []
     for ent in list_of_expanded_entities:
@@ -61,8 +61,7 @@ def popup_options():
     entity_name = sqliteExecute(db, "SELECT name FROM reporting_entities WHERE id = %s'", (entity_id, ))
 
     ### Function 4
-    entity_meta_data = sqliteExecute(db, "SELECT numb_value FROM entity_to_subentity WHERE is_numeric=1 AND id=%s'", (entity_id, )) 
-                        + sqliteExecute(db, "SELECT string_value FROM entity_to_subentity WHERE is_numeric=0 AND id=%s'", (entity_id, ))
+    entity_meta_data = sqliteExecute(db, "SELECT numb_value FROM entity_to_subentity WHERE is_numeric=1 AND id=%s'", (entity_id, ))  + sqliteExecute(db, "SELECT string_value FROM entity_to_subentity WHERE is_numeric=0 AND id=%s'", (entity_id, ))
 
     ### Function 3?
     user_entities = (
