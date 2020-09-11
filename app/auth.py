@@ -41,7 +41,7 @@ def login_post():
         return jsonify({'result': status})
 
     login_user(user)
-    session['logged_in'] = True
+    #session['logged_in'] = True
     status=True
     return jsonify({'result': status})
 
