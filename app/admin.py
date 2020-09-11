@@ -27,12 +27,15 @@ def updateSqliteTable(database, table, email, flag):
             print("The SQLite connection is closed")
 
 def sqliteExecute(database, instruction):
+    conn = None
     try:
         conn = sqlite3.connect(database)
+        # fetchall() returns a list of tuples, and the second element is redundant,
+        # so the lambda below takes only the first element
+        conn.row_factory = lambda cursor, row: row[0] 
         cursor = conn.cursor()
         print("Connected to SQLite")
-
-        cursor.execute(instruction)
+        result = cursor.execute(instruction).fetchall()
         print("Instruction executed successfully")
         conn.commit()
         conn.close()
@@ -44,6 +47,9 @@ def sqliteExecute(database, instruction):
         if (conn):
             conn.close()
             print("The SQLite connection is closed")
+            
+    return result
+    
 
 #Example instructions: 
 #

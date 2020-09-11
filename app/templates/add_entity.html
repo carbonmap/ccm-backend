@@ -25,9 +25,9 @@
                 </label>
             </div>  
             <div class="select">
-                <select name="primaries">
-                    {% for value, key in list_entities %}
-                        <option value="{{value}}">{{key}}</option>
+                <select name="primary_id">
+                    {% for entity in list_entities %}
+                        <option value="{{entity}}">{{entity}}</option>
                     {% endfor %}
                 </select>
             </div>            

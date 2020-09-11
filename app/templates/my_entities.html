@@ -1,7 +1,17 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1 class="title">
-  Check out these entities...
-</h1>
+{%if user_entities%}
+<h2 style="text-align:left;">
+  You have the following entities:
+</h2>
+<ol>
+  {%for entity in user_entities%}
+    <li style="text-align:left;">{{entity}}</li>
+  {%endfor%} 
+</ol> 
+{%else%}
+  <h2> You have no entities yet :( </h2>
+{%endif%}
+{% endblock %}
 {% endblock %}

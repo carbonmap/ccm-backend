@@ -9,6 +9,7 @@ from flask import (
 from flask_login import login_required, current_user
 from .models import ReportingEntity, EntityToSubentity, UserToEntity
 from . import db
+from .admin import sqliteExecute
 import uuid
 
 profile = Blueprint("profile", __name__)
@@ -38,7 +39,8 @@ def my_entities():
     # ]
 
     # This will be used by both the map entity dashboard, and the popup function (popup_options)
-    return render_template("my_entities.html")
+
+    return render_template("my_entities.html",user_entities=user_entities)
 
 
 @profile.route("/add_entity")
@@ -53,7 +55,7 @@ def add_entity():
     # Geohash (entered in for now, in the next version this will be a point selection on the map)
 
     # If it is a subentity, the final id is actually entity_id.id, otherwise it's just id
-    list_entities = [('my house', 'House 1'), ('your house', 'House 2'), ('Donald Trump house', 'House 3')]
+    list_entities = sqliteExecute("./app/db.sqlite","SELECT name FROM reporting_entity")
     
     return render_template("add_entity.html",list_entities=list_entities)
 
@@ -72,8 +74,7 @@ def add_entity_post():
     is_sub = False    
     human_name = request.form.get("human_name") # String from textfield
     is_sub = request.form.get("is_sub") # Boolean from the checkbox
-    # new_id = request.form.get("new_id") # String from textfield
-    new_id = str(uuid.uuid4().int) # At the moment generate unique id for new entity rather than accept user's id
+    new_id = request.form.get("new_id") # String from textfield
     location = request.form.get("location") # String from textfield
 
     # All of these are required, so let's flash when one isn't given
