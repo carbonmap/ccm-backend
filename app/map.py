@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, request
 from flask_login import login_required, current_user
 
 from .admin import sqliteExecute
@@ -20,14 +20,15 @@ def map_view():
     # the url (function 2 for each of the url arguments)
 
     # This gets the list of entities from the url:
-    list_of_expanded_entities = request.args.get("reveal")
+    list_of_expanded_entities = request.args.get("reveal[]")
+    print(list_of_expanded_entities)
 
-    primary_entities = sqliteExecute(db, "SELECT id FROM reporting_entities WHERE primary_display = 1")
+    primary_entities = sqliteExecute("app/db.sqlite", "SELECT id FROM reporting_entities WHERE primary_display = 1")
     ### Function 1 on database
 
     displayed_subentities = []
     for ent in list_of_expanded_entities:
-        displayed_subentities.append(sqliteExecute(db, "SELECT subentity_id FROM entity_to_subentity WHERE entity_id = %s'", (ent, )))
+        displayed_subentities.append(sqliteExecute("app/db.sqlite", "SELECT subentity_id FROM entity_to_subentity WHERE entity_id = %s'", (ent, )))
         ### Function 2 on database for all relevant entities
 
         # i.e. when the user first enters the map, the will have url .../mapview
@@ -58,10 +59,10 @@ def popup_options():
     entity_id = request.args.get("entity_id")
 
     ### Function 6?
-    entity_name = sqliteExecute(db, "SELECT name FROM reporting_entities WHERE id = %s'", (entity_id, ))
+    entity_name = sqliteExecute("app/db.sqlite", "SELECT name FROM reporting_entities WHERE id = %s'", (entity_id, ))
 
     ### Function 4
-    entity_meta_data = sqliteExecute(db, "SELECT numb_value FROM entity_to_subentity WHERE is_numeric=1 AND id=%s'", (entity_id, ))  + sqliteExecute(db, "SELECT string_value FROM entity_to_subentity WHERE is_numeric=0 AND id=%s'", (entity_id, ))
+    entity_meta_data = sqliteExecute("app/db.sqlite", "SELECT numb_value FROM entity_to_subentity WHERE is_numeric=1 AND id=%s'", (entity_id, ))  + sqliteExecute(db, "SELECT string_value FROM entity_to_subentity WHERE is_numeric=0 AND id=%s'", (entity_id, ))
 
     ### Function 3?
     user_entities = (
