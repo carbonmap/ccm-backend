@@ -25,6 +25,7 @@ def updateSqliteTable(database, table, email, flag):
         if sqliteConnection:
             sqliteConnection.close()
             print("The SQLite connection is closed")
+    ## Need return statement!
 
 def sqliteExecute(database, instruction):
     try:
@@ -34,6 +35,9 @@ def sqliteExecute(database, instruction):
 
         cursor.execute(instruction)
         print("Instruction executed successfully")
+
+        result = cursor.fetchall()
+
         conn.commit()
         conn.close()
     
@@ -47,7 +51,7 @@ def sqliteExecute(database, instruction):
     #     if (conn):
     #         conn.close()
     #         print("The SQLite connection is closed")
-
+    return result
 #Example instructions: 
 #
 # "CREATE TABLE reporting_entities(id int, Name varchar(32), Prime varchar(32), status varchar(32), osm_id varchar(32), geohash varchar(32))"    
