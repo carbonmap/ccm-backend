@@ -36,6 +36,7 @@ def sqliteExecute(database, instruction):
         cursor.execute(instruction)
         print("Instruction executed successfully")
 
+        # Produces a list of tuples where tuple elements are row elements given by instruction
         result = cursor.fetchall()
 
         conn.commit()

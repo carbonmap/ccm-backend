@@ -24,20 +24,19 @@ def map_view():
     # Want this to be a list of strings so for loop below works!!! 
     print(list_of_expanded_entities) 
 
-    primary_entities = sqliteExecute("app/db.sqlite", "SELECT id FROM reporting_entities WHERE primary_display = 1")
+    primary_entities = sqliteExecute("app/db.sqlite", "SELECT id FROM reporting_entity WHERE primary_display = 1")
     ### Function 1 on database
 
     displayed_subentities = []
     for ent in list_of_expanded_entities:
-        displayed_subentities.append(sqliteExecute("app/db.sqlite", "SELECT subentity_id FROM entity_to_subentity WHERE entity_id={}".format(ent))
+        displayed_subentities.append(sqliteExecute("app/db.sqlite", "SELECT subentity_id FROM entity_to_subentity WHERE entity_id={}".format(ent)))
         ### Function 2 on database for all relevant entities
 
         # i.e. when the user first enters the map, the will have url .../mapview
         # This means displayed_subentities is empty and they only return primary_entities
 
-        # Return list of entitiy that combines primary_entities and displayed_subentities
-    entities_to_view = primary_entities + displayed_subentities
-    return entities_to_view
+    # Return list of entitiy that combines primary_entities and displayed_subentities
+    return primary_entities + displayed_subentities
 
 
 @map.route("/popup_options")
@@ -60,10 +59,10 @@ def popup_options():
     entity_id = request.args.get("entity_id")
 
     ### Function 6?
-    entity_name = sqliteExecute("app/db.sqlite", "SELECT name FROM reporting_entities WHERE id={}".format(entity_id))
+    entity_name = sqliteExecute("app/db.sqlite", "SELECT name FROM reporting_entity WHERE id={}".format(entity_id))
 
     ### Function 4 ...... I'm assuming each sqliteExecute makes a list so I can add the two together to make a bigger list
-    entity_meta_data = sqliteExecute("app/db.sqlite", "SELECT numb_value FROM entity_properties WHERE is_numeric=1 AND id={}".format(entity_id))  + sqliteExecute(db, "SELECT string_value FROM entity_properties WHERE is_numeric=0 AND id={}".format(entity_id))
+    entity_meta_data = sqliteExecute("app/db.sqlite", "SELECT numb_value FROM entity_property WHERE is_numeric=1 AND id={}".format(entity_id))  + sqliteExecute(db, "SELECT string_value FROM entity_properties WHERE is_numeric=0 AND id={}".format(entity_id))
 
     ### Function 3?
     user_entities = (
