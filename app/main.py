@@ -40,15 +40,15 @@ def populate_dummy_values():
     INSERT INTO reporting_entity(id,name,primary_display,status,osm_id,centerpoint) VALUES ('uk.ac.cam.christ','christ',TRUE,'submitted','osm8','cp8');
 
 
-    INSERT INTO entity_property(id,property,is_numeric,numb_value,string_value) VALUES ('uk.ac.cam.kings','kings main',TRUE,4000,NULL);
-    INSERT INTO entity_property(id,property,is_numeric,numb_value,string_value) VALUES ('uk.ac.cam.kings.k1','kings bodleys',TRUE,50,NULL);
-    INSERT INTO entity_property(id,property,is_numeric,numb_value,string_value) VALUES ('uk.ac.cam.kings.k2','kings garden',FALSE,NULL,'next to Fellow''s garden');
-    INSERT INTO entity_property(id,property,is_numeric,numb_value,string_value) VALUES ('uk.ac.cam.kings.k3','kings market',FALSE,NULL,'next to marketplace');
-    INSERT INTO entity_property(id,property,is_numeric,numb_value,string_value) VALUES ('uk.ac.cam.corpuschristi','cc main num',TRUE,2000,NULL);
-    INSERT INTO entity_property(id,property,is_numeric,numb_value,string_value) VALUES ('uk.ac.cam.corpuschristi','cc main',FALSE,NULL,'translates to christ\'s pieces');
-    INSERT INTO entity_property(id,property,is_numeric,numb_value,string_value) VALUES ('uk.ac.cam.corpuschristi.cc2','cc building 2',TRUE,30,NULL);
-    INSERT INTO entity_property(id,property,is_numeric,numb_value,string_value) VALUES ('uk.ac.cam.corpuschristi.cc3','cc building 3',TRUE,60,NULL);
-    INSERT INTO entity_property(id,property,is_numeric,numb_value,string_value) VALUES ('uk.ac.cam.christ','christ main',TRUE,1500,NULL);
+    INSERT INTO entity_properties(id,property,is_numeric,numb_value,string_value) VALUES ('uk.ac.cam.kings','kings main',TRUE,4000,NULL);
+    INSERT INTO entity_properties(id,property,is_numeric,numb_value,string_value) VALUES ('uk.ac.cam.kings.k1','kings bodleys',TRUE,50,NULL);
+    INSERT INTO entity_properties(id,property,is_numeric,numb_value,string_value) VALUES ('uk.ac.cam.kings.k2','kings garden',FALSE,NULL,'next to Fellow''s garden');
+    INSERT INTO entity_properties(id,property,is_numeric,numb_value,string_value) VALUES ('uk.ac.cam.kings.k3','kings market',FALSE,NULL,'next to marketplace');
+    INSERT INTO entity_properties(id,property,is_numeric,numb_value,string_value) VALUES ('uk.ac.cam.corpuschristi','cc main num',TRUE,2000,NULL);
+    INSERT INTO entity_properties(id,property,is_numeric,numb_value,string_value) VALUES ('uk.ac.cam.corpuschristi','cc main',FALSE,NULL,'translates to christ\'s pieces');
+    INSERT INTO entity_properties(id,property,is_numeric,numb_value,string_value) VALUES ('uk.ac.cam.corpuschristi.cc2','cc building 2',TRUE,30,NULL);
+    INSERT INTO entity_properties(id,property,is_numeric,numb_value,string_value) VALUES ('uk.ac.cam.corpuschristi.cc3','cc building 3',TRUE,60,NULL);
+    INSERT INTO entity_properties(id,property,is_numeric,numb_value,string_value) VALUES ('uk.ac.cam.christ','christ main',TRUE,1500,NULL);
 
 
     INSERT INTO entity_to_subentity(entity_id,subentity_id) VALUES ('uk.ac.cam.kings','uk.ac.cam.kings.k1');
