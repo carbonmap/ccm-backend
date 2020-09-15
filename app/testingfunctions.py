@@ -1,5 +1,6 @@
 import sqlite3
 
+
 ## Function 1: SELECT id FROM reporting_entity WHERE primary_display=1;
 ## Function 2: SELECT subentity_id FROM entity_to_subentity WHERE entity_id=entity_id_variable;
 ## Function 3: SELECT entity_id,role FROM user_to_entity WHERE user_id=user_id_variable;
@@ -15,8 +16,8 @@ conn = sqlite3.connect("db.sqlite")
 cursor = conn.cursor()
 print("Connected to SQLite")
 
-## Insert function here from list above
-cursor.execute("SELECT id FROM reporting_entity WHERE primary_display=1")
+## Insert function here from list above WE USE ? TO INSERT VARIABLE
+cursor.execute("SELECT id FROM reporting_entity WHERE primary_display=1", ())
 print("Instruction executed successfully")
 
 ## This produces a list of tuples where tuple elements are row elements

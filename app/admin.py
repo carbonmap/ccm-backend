@@ -27,15 +27,15 @@ def updateSqliteTable(database, table, email, flag):
             print("The SQLite connection is closed")
     ## Need return statement!
 
-def sqliteExecute(database, instruction):
+def sqliteExecute(database, instruction, params):
     try:
         conn = sqlite3.connect(database)
         cursor = conn.cursor()
         print("Connected to SQLite")
 
-        cursor.execute(instruction)
+        cursor.execute(instruction, params)
         print("Instruction executed successfully")
-
+ 
         # Produces a list of tuples where tuple elements are row elements given by instruction
         result = cursor.fetchall()
 
