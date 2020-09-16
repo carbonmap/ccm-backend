@@ -47,7 +47,3 @@ def Move():
     print("The text file has been moved")
 
     return show_files()
-
-
-if __name__ == "__main__":
-    superuser_dashboard.run(debug=True)
