@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, jsonify
+from flask import Blueprint, render_template, jsonify
 import os, os.path
 import shutil
 
@@ -15,20 +15,19 @@ confirmed_list = os.listdir(confirmed_path)  # list of all the files limbo folde
 @superuser_dashboard.route("/superuser_dashboard")
 def super_dash():
     return render_template(
-        "super_dash.html", limbo_list=limbo_list, confirmed_list=confirmed_list
+        "super_dash.html"
     )
 
 
-@superuser_dashboard.route("/showfiles")
+@superuser_dashboard.route("/showfiles", methods=['POST'])
 def show_files():
-    return render_template(
-        "show_files.html",
-        limbo_list=os.listdir(limbo_path),
-        confirmed_list=os.listdir(confirmed_path),
-    )
+    limbo_list=os.listdir(limbo_path)
+    confirmed_list=os.listdir(confirmed_path)
+    data = {'limbo' : limbo_list, 'confirmed' : confirmed_list}
+    return jsonify(data)
 
 
-@superuser_dashboard.route("/movefile")
+@superuser_dashboard.route("/movefile", methods=['POST'])
 def Move():
     # function checks which folder the file is in, then moves it to the other folder
 

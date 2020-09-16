@@ -4,41 +4,55 @@
     <meta charset="utf-8">
     <title>Super-User Dashboard</title>
 
-    <!-- Javascript linking hmtl page to AJAX api -->
+    <!-- Link to AJAX api -->
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"> </script>
-    <link rel="stylesheet" href="https://unpkg.com/purecss@2.0.3/build/pure-min.css" integrity="sha384-cg6SkqEOCV1NbJoCu11+bm0NvBRc8IYLRGXkmNrqUBfTjmMYwNKPWBTIKyw9mHNJ" crossorigin="anonymous">
+    
   </head>
   <body>
-    <h1>
+    <h3 class="title">
         Super-User Dashboard
-    </h1>
+    </h3>
     <p>
       Click this button to move the file from limbo folder to confirmed folder!
       <input type = "button" id = "mybutton" value = "Move file" />
     </p>
-
-    <div id="place_for_files"></div> 
+    <p>Limbo Files:</p>
+    <div id="place_for_limbo_files"></div> 
+    
+    <p>Confirmed Files:</p>
+    <div id="place_for_confirmed_files"></div> 
 
 <!-- Load lists of files on page load -->
 <script>
-  $.ajax({ url: "/showfiles",
-      success: function(response){
-        $("#place_for_files").html(response);
-      }});
+  $.ajax({                        
+      url: '/showfiles',
+      type : 'post',
+      contentType: 'application/json',
+      dataType : 'json',
+  }).done(function(result) {
+      $("#place_for_limbo_files").html(result["limbo"]); 
+      $("#place_for_confirmed_files").html(result["confirmed"]);// this calls the
+  }).fail(function(jqXHR, textStatus, errorThrown) {
+      console.log("fail: ",textStatus, errorThrown);
+  });
 </script>
 
 <!-- Move file on click and re-render the lists of files -->
 <script>
   $("#mybutton").click(function(){
-     $.ajax({
-        url: "/movefile",
-        success: function(response) {
-          $("#place_for_files").html(response);
-        }
-      });
+    $.ajax({                        
+        url: '/movefile',
+        type : 'post',
+        contentType: 'application/json',
+        dataType : 'json',
+    }).done(function(result) {
+        $("#place_for_limbo_files").html(result["limbo"]); 
+        $("#place_for_confirmed_files").html(result["confirmed"]); // this calls the result of the movefile function
+    }).fail(function(jqXHR, textStatus, errorThrown) {
+        console.log("fail: ",textStatus, errorThrown);
+    }); 
   });
-  </script>
-
+</script>
     
     
   </body>
