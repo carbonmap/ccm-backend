@@ -24,12 +24,12 @@ def map_view():
     # Want this to be a list of strings so for loop below works!!! 
     print(list_of_expanded_entities) 
 
-    primary_entities = sqliteExecute("app/db.sqlite", "SELECT id FROM reporting_entity WHERE primary_display = 1")
+    primary_entities = sqliteExecute("app/db.sqlite", "SELECT id FROM reporting_entity WHERE primary_display=1", ())
     ### Function 1 on database
 
     displayed_subentities = []
     for ent in list_of_expanded_entities:
-        displayed_subentities.append(sqliteExecute("app/db.sqlite", "SELECT subentity_id FROM entity_to_subentity WHERE entity_id={}".format(ent)))
+        displayed_subentities.append(sqliteExecute("app/db.sqlite", "SELECT subentity_id FROM entity_to_subentity WHERE entity_id=?", (entity_id, )))
         ### Function 2 on database for all relevant entities
 
         # i.e. when the user first enters the map, the will have url .../mapview
@@ -59,12 +59,12 @@ def popup_options():
     entity_id = request.args.get("entity_id")
 
     ### Function 6?
-    entity_name = sqliteExecute("app/db.sqlite", "SELECT name FROM reporting_entity WHERE id={}".format(entity_id))
+    entity_name = sqliteExecute("app/db.sqlite", "SELECT name FROM reporting_entity WHERE id=?", (id, ))
 
     ### Function 4 ...... I'm assuming each sqliteExecute makes a list so I can add the two together to make a bigger list
-    entity_meta_data = sqliteExecute("app/db.sqlite", "SELECT numb_value FROM entity_property WHERE is_numeric=1 AND id={}".format(entity_id))  + sqliteExecute(db, "SELECT string_value FROM entity_properties WHERE is_numeric=0 AND id={}".format(entity_id))
+    entity_meta_data = sqliteExecute("app/db.sqlite", "SELECT numb_value FROM entity_property WHERE is_numeric=1 AND id=?", (id, ))  + sqliteExecute("app/db.sqlite", "SELECT string_value FROM entity_properties WHERE is_numeric=0 AND id=?", (id, ))
 
-    ### Function 3?
+    ### Function 3 and 5?
     user_entities = (
         my_entities
     )  ### Send a request to .../my_entities which returns a list of entity ids the user has access to, and their permission to each

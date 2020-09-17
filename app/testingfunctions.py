@@ -1,4 +1,5 @@
 import sqlite3
+from admin import sqliteExecute
 
 
 ## Function 1: SELECT id FROM reporting_entity WHERE primary_display=1;
@@ -6,32 +7,24 @@ import sqlite3
 ## Function 3: SELECT entity_id,role FROM user_to_entity WHERE user_id=user_id_variable;
 ## Function 4: SELECT numb_value FROM entity_property WHERE is_numeric=1 AND id=id_variable;
 ##             SELECT string_value FROM entity_property WHERE is_numeric=0 AND id=id_variable;
-## Function 5: ? this is a check to see if a user is a superuser
+## Function 5: SELECT id FROM superusers WHERE id=id_variable
 ## Function 6: SELECT name FROM reporting_entity WHERE id=id_variable
 
-id = "uk.ac.cam.kings"
+id = "uk.ac.cam.kings"      ## For primary entities, entity_id and id are the same, for non-primary entities the entity_id is that of the primary and the id is that of the individual building
+user_id = "john_id"         ## The user that controls the entities
 
-conn = sqlite3.connect("db.sqlite")
 
-cursor = conn.cursor()
-print("Connected to SQLite")
-
-## Insert function here from list above WE USE ? TO INSERT VARIABLE
-cursor.execute("SELECT id FROM reporting_entity WHERE primary_display=1", ())
-print("Instruction executed successfully")
+## Use a ? where the variable should be, and then list the variables in a tuple as the 3rd argument of sqliteExecute
+answer = sqliteExecute("db.sqlite", "SELECT name FROM reporting_entity WHERE id=?", (id, ))
 
 ## This produces a list of tuples where tuple elements are row elements
-result = cursor.fetchall()
-print(result)
+print(answer)
 
 ## If we just want the first tuple/row of the list:
-#print(result[0])
+#print(answer[0])
 
 ## If we want the first element of each tuple in a list - useful for functions 1,2:
 first = []
-for tup in result:
+for tup in answer:
     first.append(tup[0])
 print(first)    
-
-conn.commit()
-conn.close()
