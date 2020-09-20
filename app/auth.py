@@ -6,6 +6,7 @@ from flask import (
     request,
     flash,
     current_app,
+    jsonify
 )
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, logout_user, login_required, current_user
@@ -27,18 +28,22 @@ def login():
 
 @auth.route("/login", methods=["POST"])
 def login_post():
-    email = request.form.get("email")
-    password = request.form.get("password")
-    remember = True if request.form.get("remember") else False
+    email = request.json["email"]
+    password = request.json["password"]
+    #remember = True if request.form.get("remember") else False
 
     user = User.query.filter_by(email=email).first()
 
     if not user or not check_password_hash(user.password, password):
-        flash("Invalid email address or password.")
-        return redirect(url_for("auth.login"))
+        #flash("Invalid email address or password.")
+        #return redirect(url_for("auth.login"))
+        status=False
+        return jsonify({'result': status})
 
-    login_user(user, remember=remember)
-    return redirect(url_for("main.profile"))
+    login_user(user)
+    #session['logged_in'] = True
+    status=True
+    return jsonify({'result': status})
 
 
 @auth.route("/register")
@@ -48,19 +53,19 @@ def register():
 
 @auth.route("/register", methods=["POST"])
 def register_post():
-
-    name = request.form.get("name")
-    org = request.form.get("org")
-    user_type = request.form.get("user_type")
-    email = request.form.get("email")
-    print(email)
-    password = request.form.get("password")
+    name = request.json["full_name"]
+    org = request.json["org"]
+    user_type = request.json["user_type"]
+    email = request.json["email"]
+    password = request.json["password"]
 
     user = User.query.filter_by(email=email).first()
 
     if user:
-        flash("Email address already exists")
-        return redirect(url_for("auth.register"))
+        #flash("Email address already exists")
+        #return redirect(url_for("auth.register"))
+        status = "Email address already exists"
+        return jsonify({'result': status})
 
     new_user = User(
         id=str(uuid.uuid4()),
@@ -86,8 +91,10 @@ def register_post():
 
     login_user(new_user)
 
-    flash("A confirmation email has been sent via email", "success")
-    return redirect(url_for("main.index"))
+    #flash("A confirmation email has been sent via email", "success")
+    #return redirect(url_for("main.index"))
+    status = "A confirmation email has been sent via email"
+    return jsonify({'result': status})
 
 
 @auth.route("/logout")
