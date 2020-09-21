@@ -10,8 +10,10 @@ from admin import sqliteExecute
 ## Function 5: SELECT id FROM superusers WHERE id=id_variable
 ## Function 6: SELECT name FROM reporting_entity WHERE id=id_variable
 
-id = "uk.ac.cam.kings"      ## For primary entities, entity_id and id are the same, for non-primary entities the entity_id is that of the primary and the id is that of the individual building
-user_id = "john_id"         ## The user that controls the entities
+id = "uk.ac.cam.kings.k1"       ## For primary entities, entity_id and id are the same, 
+entity_id = "uk.ac.cam.kings"   ## but for non-primary entities the entity_id is that of the primary and the id is that of the individual 
+                                ## building (!in all tables except user_to_entity which is CONFUSING)
+user_id = "john_id"             ## The user that controls the entities
 
 
 ## Use a ? where the variable should be, and then list the variables in a tuple as the 3rd argument of sqliteExecute
