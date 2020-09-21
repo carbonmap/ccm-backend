@@ -9,6 +9,40 @@ from . import db
 profile = Blueprint("profile", __name__)
 
 
+# Final format
+# [
+#     {
+#         name: "King's College, Cambridge",
+#         id: "uk.ac.cam.kings",
+#         joined: 1234568,
+#         latest_data: 1234568,
+#         parent_entity: null,
+#         properties: {
+#             "Year Established": 1350,
+#             "Number of Students": 1500
+#         }
+#     },
+#     {
+#         name: "King's College Gardens",
+#         id: "uk.ac.cam.kings.gardens",
+#         joined: 1234568,
+#         latest_data: 1234568,
+#         parent_entity: "uk.ac.cam.kings",
+#         properties: {
+#             "Year Established": 1350,
+#             "Number of Employees": 8
+#         }
+#     },
+# ]
+
+@profile.route("/entites_full_info")
+@login_required
+def entites_full_info():
+    
+    entites = None # Send request/just call to my_entities(), get a list of entity ids
+
+
+
 @profile.route("/my_entities")
 @login_required
 def my_entities():
