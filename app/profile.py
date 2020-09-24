@@ -1,9 +1,46 @@
 from flask import Blueprint, render_template
 from flask_login import login_required, current_user
 from .models import ReportingEntity, EntityToSubentity, UserToEntity
+
+from .admin import sqliteExecute
 from . import db
 
+
 profile = Blueprint("profile", __name__)
+
+
+# Final format
+# [
+#     {
+#         name: "King's College, Cambridge",
+#         id: "uk.ac.cam.kings",
+#         joined: 1234568,
+#         latest_data: 1234568,
+#         parent_entity: null,
+#         properties: {
+#             "Year Established": 1350,
+#             "Number of Students": 1500
+#         }
+#     },
+#     {
+#         name: "King's College Gardens",
+#         id: "uk.ac.cam.kings.gardens",
+#         joined: 1234568,
+#         latest_data: 1234568,
+#         parent_entity: "uk.ac.cam.kings",
+#         properties: {
+#             "Year Established": 1350,
+#             "Number of Employees": 8
+#         }
+#     },
+# ]
+
+@profile.route("/entites_full_info")
+@login_required
+def entites_full_info():
+    
+    entites = None # Send request/just call to my_entities(), get a list of entity ids
+
 
 
 @profile.route("/my_entities")
@@ -24,6 +61,9 @@ def my_entities():
     # ]
 
     # This will be used by both the map entity dashboard, and the popup function (popup_options)
+    ### Function 3
+    user_entities = sqliteExecute("app/db.sqlite", "SELECT entity_id,role FROM user_to_entity WHERE user_id=?", (user_id, ))
+    return user_entities
 
 
 @profile.route("/add_entity")

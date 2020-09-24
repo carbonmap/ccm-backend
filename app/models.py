@@ -16,17 +16,17 @@ class User(UserMixin, db.Model):
 class ReportingEntity(db.Model):
     id = db.Column(db.String(1000), primary_key=True, nullable=False)
     name = db.Column(db.String(1000), nullable=False)
-    primary = db.Column(db.Boolean, nullable=False)
+    primary_display = db.Column(db.Boolean, nullable=False)
     status = db.Column(db.String, nullable=False)
     osm_id = db.Column(db.String, nullable=True)
-    geohash = db.Column(db.String, nullable=True)
+    centerpoint = db.Column(db.String, nullable=True)
 
 class EntityProperty(db.Model):
     # Composite primary key
     id = db.Column(db.String(1000), db.ForeignKey(ReportingEntity.id), nullable=False, primary_key=True)
-    entity_property = db.Column(db.String(1000), nullable=False, primary_key=True)
-    numeric = db.Column(db.Boolean, nullable=False)
-    num_value = db.Column(db.Float, nullable=True)
+    property = db.Column(db.String(1000), nullable=False, primary_key=True)
+    is_numeric = db.Column(db.Boolean, nullable=False)
+    numb_value = db.Column(db.Float, nullable=True)
     str_value = db.Column(db.String, nullable=True)
 
 class EntityToSubentity(db.Model):
@@ -38,6 +38,7 @@ class UserToEntity(db.Model):
     # Composite primary foreign key
     user_id = db.Column(db.String(1000), db.ForeignKey(User.id), nullable=False, primary_key=True)
     entity_id = db.Column(db.String(1000), db.ForeignKey(ReportingEntity.id), nullable=False, primary_key=True)
+    role = db.Column(db.String(1000), db.ForeignKey(User.id), nullable=False)
 
 class SuperUser(db.Model):
     superuser_id = db.Column(db.String(1000), db.ForeignKey(User.id), nullable=False, primary_key=True)
