@@ -4,8 +4,8 @@ import shutil
 
 superuser_dashboard = Blueprint("superuser_dashboard", __name__)
 
-limbo_path = "test_data/limbo_state/"
-confirmed_path = "test_data/confirmed_state/"
+limbo_path = "geojson/not_approved"
+confirmed_path = "geojson/approved/"
 file_name = "some_text.txt"
 
 limbo_list = os.listdir(limbo_path)  # list of all the files limbo folder
