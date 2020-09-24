@@ -1,10 +1,13 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, jsonify
 from flask_login import login_required, current_user
+import json
+import sqlite3
 
 from .admin import sqliteExecute
 from . import db
-
 from .profile import my_entities
+
+
 
 map = Blueprint("map", __name__)
 
@@ -77,3 +80,33 @@ def popup_options():
         "user_permission": user_permission,
     }
     # The front end can then receive this and produce a popup with the name and metadata
+
+@map.route("/map", methods=["POST"])
+def primary_entities():
+    db = "C:/Users/Jeevs/ccm-backend/app/db.sqlite"
+    try:
+        conn = sqlite3.connect(db)
+        cursor = conn.cursor()
+        print("Connected to SQLite")
+
+        cursor.execute("SELECT id FROM reporting_entity WHERE primary_display = 1")
+        rows = cursor.fetchall()
+        print(rows)
+        for row in rows:
+            print(row[0])
+        cursor.close()
+
+    except sqlite3.Error as error:
+        print("Failed to update sqlite table", error)
+
+    finally:
+        if conn:
+            conn.close()
+            print("The SQLite connection is closed")
+        return jsonify(rows)
+
+
+    #with open("C:/Users/Jeevs/ccm-backend/app/geojson/uk.ac.cam.kings.geojson") as f:
+        #status = json.load(f)
+    
+    #return status
