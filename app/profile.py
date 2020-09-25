@@ -8,7 +8,6 @@ from . import db
 
 profile = Blueprint("profile", __name__)
 
-
 # Final format
 # [
 #     {
@@ -35,11 +34,11 @@ profile = Blueprint("profile", __name__)
 #     },
 # ]
 
-@profile.route("/entites_full_info")
+@profile.route("/")
 @login_required
-def entites_full_info():
-    
-    entites = None # Send request/just call to my_entities(), get a list of entity ids
+def profile_page():
+    user_entities = my_entities()
+    return render_template("profile.html", subentities=user_entities)
 
 
 
@@ -48,7 +47,6 @@ def entites_full_info():
 def my_entities():
     user_id = current_user.id
 
-    # TODO: 050920
     # Make a request to database
     # Return all entities in the table `user_to_entity` where the `user_id` is the user_id (function 3)
     # Return a list of just the user's entities in this form:
@@ -60,10 +58,31 @@ def my_entities():
     #     ("uk.ac.cam.kings.k3", "emissions"),
     # ]
 
-    # This will be used by both the map entity dashboard, and the popup function (popup_options)
     ### Function 3
     user_entities = sqliteExecute("app/db.sqlite", "SELECT entity_id,role FROM user_to_entity WHERE user_id=?", (user_id, ))
+
     return user_entities
+
+@profile.route("/entities_full_info")
+@login_required
+def entities_full_info():
+    entities = my_entities()
+    ids = []
+    for tup in entities:
+        ids.append(tup[0])
+    
+    full_info = []
+    for id in ids:
+        info = {}
+        info[name] = sqliteExecute("app/db.sqlite", "SELECT name FROM reporting_entity WHERE id=?", (id, ))
+        info[id] = id
+        info[joined] = None
+        info[latest_data] = None
+        info[parent_entity] = sqliteExecute("app/db.sqlite", "SELECT entity_id FROM entity_to_subentity WHERE subentity_id=?", (id, ))
+        info[properties] = sqliteExecute("app/db.sqlite", "SELECT numb_value FROM entity_property WHERE is_numeric=1 AND id=id_variable UNION SELECT str_value FROM entity_property WHERE is_numeric=0 AND id=id_variable", (id, id, ))
+        full_info.append(info)
+
+    return full_info
 
 
 @profile.route("/add_entity")
