@@ -34,56 +34,60 @@ profile = Blueprint("profile", __name__)
 #     },
 # ]
 
-@profile.route("/")
-@login_required
-def profile_page():
-    user_entities = my_entities()
-    return render_template("profile.html", subentities=user_entities)
-
-
-
 @profile.route("/my_entities")
 @login_required
 def my_entities():
     user_id = current_user.id
-
-    # Make a request to database
-    # Return all entities in the table `user_to_entity` where the `user_id` is the user_id (function 3)
-    # Return a list of just the user's entities in this form:
-
-    # [
-    #     ("uk.ac.cam.kings", "metadata"),
-    #     ("uk.ac.cam.kings.k1", "metadata"),
-    #     ("uk.ac.cam.kings.k2", "emissions"),
-    #     ("uk.ac.cam.kings.k3", "emissions"),
-    # ]
-
-    ### Function 3
-    user_entities = sqliteExecute("app/db.sqlite", "SELECT entity_id,role FROM user_to_entity WHERE user_id=?", (user_id, ))
+    user_entities_db = sqliteExecute("db.sqlite", "SELECT entity_id FROM user_to_entity WHERE user_id=?", (user_id, ))
+    user_entities = []
+    for tup in user_entities_db:
+        user_entities.append(tup[0]) 
 
     return user_entities
 
-@profile.route("/entities_full_info")
-@login_required
+
+def entity_name(id):
+    entity_name_db = sqliteExecute("db.sqlite", "SELECT name FROM reporting_entity WHERE id=?", (id, ))
+    entity_name = (entity_name_db[0])[0]
+
+    return entity_name
+
+
+def parent_entity(id):
+    parent_entity_db = sqliteExecute("db.sqlite", "SELECT entity_id FROM entity_to_subentity WHERE subentity_id=?", (id, ))
+    if len(parent_entity_db) != 0:
+        parent_entity = (parent_entity_db[0])[0]
+    else:
+        parent_entity = "null"
+
+    return parent_entity
+
+def properties(id):
+    properties = {}
+    properties_db = sqliteExecute("db.sqlite", "SELECT property,numb_value FROM entity_property WHERE is_numeric=1 AND id=? UNION SELECT property,str_value FROM entity_property WHERE is_numeric=0 AND id=?", (id, id, ))
+    for tup in properties_db:
+        properties[tup[0]] = tup[1]
+
+    return properties
+
+
 def entities_full_info():
-    entities = my_entities()
-    ids = []
-    for tup in entities:
-        ids.append(tup[0])
-    
+    ids = my_entities()
     full_info = []
     for id in ids:
         info = {}
-        info[name] = sqliteExecute("app/db.sqlite", "SELECT name FROM reporting_entity WHERE id=?", (id, ))
-        info[id] = id
-        info[joined] = None
-        info[latest_data] = None
-        info[parent_entity] = sqliteExecute("app/db.sqlite", "SELECT entity_id FROM entity_to_subentity WHERE subentity_id=?", (id, ))
-        info[properties] = sqliteExecute("app/db.sqlite", "SELECT numb_value FROM entity_property WHERE is_numeric=1 AND id=id_variable UNION SELECT str_value FROM entity_property WHERE is_numeric=0 AND id=id_variable", (id, id, ))
+        info['name'] = entity_name(id)
+        info['id'] = id
+        info['joined'] = None
+        info['latest_data'] = None
+        info['parent_entity'] = parent_entity(id)
+        info['properties'] = properties(id)
         full_info.append(info)
 
     return full_info
 
+print(my_entities())
+print(entities_full_info())
 
 @profile.route("/add_entity")
 def add_entity():

@@ -9,7 +9,7 @@ from admin import sqliteExecute
 ## Function 5: SELECT id FROM superusers WHERE id=id_variable
 ## Function 6: SELECT name FROM reporting_entity WHERE id=id_variable
 
-id = "uk.ac.cam.kings.k1"       ## For primary entities, entity_id and id are the same, 
+id = "uk.ac.cam.kings"       ## For primary entities, entity_id and id are the same, 
 entity_id = "uk.ac.cam.kings"   ## but for non-primary entities the entity_id is that of the primary and the id is that of the individual 
                                 ## building (!in all tables except user_to_entity which is CONFUSING)
 user_id = "john_id"             ## The user that controls the entities
@@ -20,11 +20,11 @@ answer = sqliteExecute("db.sqlite", "SELECT entity_id FROM entity_to_subentity W
 
 ## This produces a list of tuples where tuple elements are row elements
 print(answer)
-
+print(len(answer))
 ## If we just want the first tuple/row of the list:
-#print(answer[0])
+#print((answer[0])[0])
 
-## If we want the first element of each tuple in a list - useful for functions 1,2, g:
+## If we want the first element of each tuple in a list - useful for functions 1,2,6:
 first = []
 for tup in answer:
     first.append(tup[0])
