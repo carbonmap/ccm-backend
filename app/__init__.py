@@ -56,12 +56,12 @@ def create_app():
     from .main import main as main_blueprint
     from .profile import profile as profile_blueprint
     from .map import map as map_blueprint
-    from .superuser_dash import superuser_dashboard as super_dash_blueprint
+    #from .superuser_dash import superuser_dashboard as super_dash_blueprint
 
     app.register_blueprint(auth_blueprint)
     app.register_blueprint(main_blueprint)
     app.register_blueprint(profile_blueprint)
     app.register_blueprint(map_blueprint)
-    app.register_blueprint(super_dash_blueprint)
+    #app.register_blueprint(super_dash_blueprint)
 
     return app
