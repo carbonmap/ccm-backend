@@ -9,6 +9,7 @@ mail = Mail()
 
 LOAD_DUMMY_DATA = True
 
+
 def create_app():
     app = Flask(__name__)
     CORS(app)
@@ -36,17 +37,17 @@ def create_app():
     login_manager = LoginManager()
     login_manager.login_view = "auth.login"
     login_manager.init_app(app)
-    
+
     from .models import (
         User,
         ReportingEntity,
         EntityProperty,
         EntityToSubentity,
         UserToEntity,
-        SuperUser
+        SuperUser,
     )
-    
-    db.create_all(app = app)
+
+    db.create_all(app=app)
 
     @login_manager.user_loader
     def load_user(user_id):
@@ -56,12 +57,13 @@ def create_app():
     from .main import main as main_blueprint
     from .profile import profile as profile_blueprint
     from .map import map as map_blueprint
-    #from .superuser_dash import superuser_dashboard as super_dash_blueprint
+
+    # from .superuser_dash import superuser_dashboard as super_dash_blueprint
 
     app.register_blueprint(auth_blueprint)
     app.register_blueprint(main_blueprint)
     app.register_blueprint(profile_blueprint)
     app.register_blueprint(map_blueprint)
-    #app.register_blueprint(super_dash_blueprint)
+    # app.register_blueprint(super_dash_blueprint)
 
     return app

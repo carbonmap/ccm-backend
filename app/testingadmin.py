@@ -1,26 +1,28 @@
 import sqlite3
 
-id = "uk.ac.cam.kings"
+if __name__ == "__main__":
 
-conn = sqlite3.connect("db.sqlite")
+    id = "uk.ac.cam.kings"
 
-cursor = conn.cursor()
-print("Connected to SQLite")
+    conn = sqlite3.connect("db.sqlite")
 
-##produces a list of tuples where tuple elements are row elements
-cursor.execute("SELECT * FROM reporting_entity")
-print("Instruction executed successfully")
+    cursor = conn.cursor()
+    print("Connected to SQLite")
 
-result = cursor.fetchall()
-print(result)
-##if we just want the first tuple/row of the list:
-#print(result[0])
+    ##produces a list of tuples where tuple elements are row elements
+    cursor.execute("SELECT * FROM reporting_entity")
+    print("Instruction executed successfully")
 
-##if we want the first element of each tuple in a list
-#first = []
-#for tup in result:
-    #first.append(tup[0])
-#print(first)    
+    result = cursor.fetchall()
+    print(result)
+    ##if we just want the first tuple/row of the list:
+    # print(result[0])
 
-conn.commit()
-conn.close()
+    ##if we want the first element of each tuple in a list
+    # first = []
+    # for tup in result:
+    # first.append(tup[0])
+    # print(first)
+
+    conn.commit()
+    conn.close()

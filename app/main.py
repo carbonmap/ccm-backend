@@ -139,12 +139,12 @@ def populate_dummy_values():
     
 
     """
-    
+
     queries_list = monster_query.split(";")
 
     for q in queries_list:
-        sqliteExecute(database = "db.sqlite", instruction = q, params = ())
+        sqliteExecute(database="db.sqlite", instruction=q, params=())
 
     print("wow")
 
-    return ("Hi there")
+    return "Hi there"

@@ -5,7 +5,7 @@ def send_email(to, subject, template, sender):
     msg = Message(subject, recipients=[to], html=template, sender=sender)
     mail.send(msg)
 
-
-html = render_template("activate.html", confirm_url="Hello")
-subject = "Please confirm your email"
-send_email("jeevan.bhoot@gmail.com", subject, html, "jeevan.bhoot@yahoo.com")
+if __name__ == "__main__":
+    html = render_template("activate.html", confirm_url="Hello")
+    subject = "Please confirm your email"
+    send_email("jeevan.bhoot@gmail.com", subject, html, "jeevan.bhoot@yahoo.com")

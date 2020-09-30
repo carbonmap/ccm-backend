@@ -35,12 +35,12 @@ profile = Blueprint("profile", __name__)
 #     },
 # ]
 
+
 @profile.route("/entites_full_info")
 @login_required
 def entites_full_info():
-    
-    entites = None # Send request/just call to my_entities(), get a list of entity ids
 
+    entites = None  # Send request/just call to my_entities(), get a list of entity ids
 
 
 @profile.route("/my_entities")
@@ -62,7 +62,11 @@ def my_entities():
 
     # This will be used by both the map entity dashboard, and the popup function (popup_options)
     ### Function 3
-    user_entities = sqliteExecute("app/db.sqlite", "SELECT entity_id,role FROM user_to_entity WHERE user_id=?", (user_id, ))
+    user_entities = sqliteExecute(
+        "app/db.sqlite",
+        "SELECT entity_id,role FROM user_to_entity WHERE user_id=?",
+        (user_id,),
+    )
     return user_entities
 
 
@@ -94,10 +98,10 @@ def add_entity_post():
     # If new entity is a subentity, enter the right row values into entity_to_subentity table
     # Similarily add a row to use_to_entity
 
-    human_name = request.form.get("human_name") # String from textfield
-    is_sub = request.form.get("is_sub") # Boolean from the checkbox
-    new_id = request.form.get("new_id") # String from textfield
-    location = request.form.get("location") # String from textfield
+    human_name = request.form.get("human_name")  # String from textfield
+    is_sub = request.form.get("is_sub")  # Boolean from the checkbox
+    new_id = request.form.get("new_id")  # String from textfield
+    location = request.form.get("location")  # String from textfield
 
     # All of these are required, so let's flash when one isn't given
     if not all([human_name, is_sub, new_id, location]):
@@ -105,7 +109,7 @@ def add_entity_post():
         return redirect(url_for("profile.add_entity"))
 
     if is_sub:
-        primary_id = request.form.get("primary_id") # Selection from dropdown
+        primary_id = request.form.get("primary_id")  # Selection from dropdown
         primary = False
         entity_id = ".".join([primary_id, new_id])
     else:
@@ -113,27 +117,23 @@ def add_entity_post():
         entity_id = new_id
 
     new_entity = ReportingEntity(
-        id = entity_id,
-        name = human_name,
-        primary = primary,
-        status = "accepted", # Assume for now
-        geohash = location,
+        id=entity_id,
+        name=human_name,
+        primary=primary,
+        status="accepted",  # Assume for now
+        geohash=location,
     )
     # Make committing a bulk job somehow?
     db.session.add(new_entity)
     db.session.commit()
 
-    new_entity_for_user = UserToEntity(
-        user_id = current_user.id,
-        entity_id = entity_id
-    )
+    new_entity_for_user = UserToEntity(user_id=current_user.id, entity_id=entity_id)
     db.session.add(new_entity_for_user)
     db.session.commit()
 
     if is_sub:
         new_subentity_for_entity = EntityToSubentity(
-            entity_id = primary_id,
-            subentity_id = entity_id
+            entity_id=primary_id, subentity_id=entity_id
         )
         db.session.add(new_subentity_for_entity)
         db.session.commit()

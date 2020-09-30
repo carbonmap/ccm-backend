@@ -53,15 +53,13 @@ def Move():
         # logic checks which folder the file (with name == name) is in, then moves it to the other folder
         if os.path.isfile(os.path.join(limbo_path, name)) == True:
             shutil.move(
-                os.path.join(limbo_path, name),
-                os.path.join(confirmed_path, name),
+                os.path.join(limbo_path, name), os.path.join(confirmed_path, name)
             )
             toggle_db(name, accept=True)
 
         elif os.path.isfile(os.path.join(confirmed_path, name)) == True:
             shutil.move(
-                os.path.join(confirmed_path, name),
-                os.path.join(limbo_path, name),
+                os.path.join(confirmed_path, name), os.path.join(limbo_path, name)
             )
             toggle_db(name, accept=False)
 
@@ -73,24 +71,26 @@ def Move():
 # function toggles the status the file in the database. Takes two arguments: (1) file_name (2) accept=Boolean. Arg (2) allows the same function to be used for accepting or removing file
 # the function is called the move request.
 def toggle_db(file_name_arg, accept=True):
-    
-    name = file_name_arg.split('.geojson')[0] # the id in the db is the file name without the geojson extension.
+
+    name = file_name_arg.split(".geojson")[
+        0
+    ]  # the id in the db is the file name without the geojson extension.
     # if moving from limbo to confirmed
-    if accept == True: 
-        params = ('accepted', name)
+    if accept == True:
+        params = ("accepted", name)
     # if moving from confirmed to limbo
-    elif accept == False: 
-        params = ('submitted', name)
+    elif accept == False:
+        params = ("submitted", name)
 
     # Instruction for db accepting params
     instrct = """
                 UPDATE reporting_entity SET status = ? WHERE id = ?;
     """
-    sqliteExecute(database='db.sqlite', instruction=instrct, params=params)
+    sqliteExecute(database="db.sqlite", instruction=instrct, params=params)
 
-    print('Database successfully updated')
+    print("Database successfully updated")
+
 
 # Test queries
 # UPDATE reporting_entity SET status = 'accepted' WHERE id = 'net.theleys';
 # UPDATE reporting_entity SET status = 'submitted' WHERE id = 'net.theleys';
-

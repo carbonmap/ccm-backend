@@ -6,7 +6,7 @@ from flask import (
     request,
     flash,
     current_app,
-    jsonify
+    jsonify,
 )
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, logout_user, login_required, current_user
@@ -19,6 +19,7 @@ from .decorators import confirm_required
 import uuid
 
 import os
+
 app_dir = os.path.dirname(os.path.abspath(__file__))
 
 
@@ -34,20 +35,20 @@ def login():
 def login_post():
     email = request.json["email"]
     password = request.json["password"]
-    #remember = True if request.form.get("remember") else False
+    # remember = True if request.form.get("remember") else False
 
     user = User.query.filter_by(email=email).first()
 
     if not user or not check_password_hash(user.password, password):
-        #flash("Invalid email address or password.")
-        #return redirect(url_for("auth.login"))
-        status=False
-        return jsonify({'result': status})
+        # flash("Invalid email address or password.")
+        # return redirect(url_for("auth.login"))
+        status = False
+        return jsonify({"result": status})
 
     login_user(user)
-    #session['logged_in'] = True
-    status=True
-    return jsonify({'result': status})
+    # session['logged_in'] = True
+    status = True
+    return jsonify({"result": status})
 
 
 @auth.route("/register")
@@ -66,10 +67,10 @@ def register_post():
     user = User.query.filter_by(email=email).first()
 
     if user:
-        #flash("Email address already exists")
-        #return redirect(url_for("auth.register"))
+        # flash("Email address already exists")
+        # return redirect(url_for("auth.register"))
         status = "Email address already exists"
-        return jsonify({'result': status})
+        return jsonify({"result": status})
 
     new_user = User(
         id=str(uuid.uuid4()),
@@ -95,10 +96,10 @@ def register_post():
 
     login_user(new_user)
 
-    #flash("A confirmation email has been sent via email", "success")
-    #return redirect(url_for("main.index"))
+    # flash("A confirmation email has been sent via email", "success")
+    # return redirect(url_for("main.index"))
     status = "A confirmation email has been sent via email"
-    return jsonify({'result': status})
+    return jsonify({"result": status})
 
 
 @auth.route("/logout")

@@ -1,6 +1,7 @@
 from flask_login import UserMixin
 from . import db
 
+
 class User(UserMixin, db.Model):
     id = db.Column(db.String, primary_key=True)
     name = db.Column(db.String(1000))
@@ -13,6 +14,7 @@ class User(UserMixin, db.Model):
     confirmed = db.Column(db.String(100))
     confirmed_on = db.Column(db.DateTime)
 
+
 class ReportingEntity(db.Model):
     id = db.Column(db.String(1000), primary_key=True, nullable=False)
     name = db.Column(db.String(1000), nullable=False)
@@ -21,24 +23,52 @@ class ReportingEntity(db.Model):
     osm_id = db.Column(db.String, nullable=True)
     centerpoint = db.Column(db.String, nullable=True)
 
+
 class EntityProperty(db.Model):
     # Composite primary key
-    id = db.Column(db.String(1000), db.ForeignKey(ReportingEntity.id), nullable=False, primary_key=True)
+    id = db.Column(
+        db.String(1000),
+        db.ForeignKey(ReportingEntity.id),
+        nullable=False,
+        primary_key=True,
+    )
     property = db.Column(db.String(1000), nullable=False, primary_key=True)
     is_numeric = db.Column(db.Boolean, nullable=False)
     numb_value = db.Column(db.Float, nullable=True)
     str_value = db.Column(db.String, nullable=True)
 
+
 class EntityToSubentity(db.Model):
     # Composite primary foreign key
-    entity_id = db.Column(db.String(1000), db.ForeignKey(ReportingEntity.id), nullable=False, primary_key=True)
-    subentity_id = db.Column(db.String(1000), db.ForeignKey(ReportingEntity.id), nullable=False, primary_key=True)
+    entity_id = db.Column(
+        db.String(1000),
+        db.ForeignKey(ReportingEntity.id),
+        nullable=False,
+        primary_key=True,
+    )
+    subentity_id = db.Column(
+        db.String(1000),
+        db.ForeignKey(ReportingEntity.id),
+        nullable=False,
+        primary_key=True,
+    )
+
 
 class UserToEntity(db.Model):
     # Composite primary foreign key
-    user_id = db.Column(db.String(1000), db.ForeignKey(User.id), nullable=False, primary_key=True)
-    entity_id = db.Column(db.String(1000), db.ForeignKey(ReportingEntity.id), nullable=False, primary_key=True)
+    user_id = db.Column(
+        db.String(1000), db.ForeignKey(User.id), nullable=False, primary_key=True
+    )
+    entity_id = db.Column(
+        db.String(1000),
+        db.ForeignKey(ReportingEntity.id),
+        nullable=False,
+        primary_key=True,
+    )
     role = db.Column(db.String(1000), db.ForeignKey(User.id), nullable=False)
 
+
 class SuperUser(db.Model):
-    superuser_id = db.Column(db.String(1000), db.ForeignKey(User.id), nullable=False, primary_key=True)
+    superuser_id = db.Column(
+        db.String(1000), db.ForeignKey(User.id), nullable=False, primary_key=True
+    )
