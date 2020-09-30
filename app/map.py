@@ -81,7 +81,7 @@ def popup_options():
     }
     # The front end can then receive this and produce a popup with the name and metadata
 
-@map.route("/map", methods=["POST"])
+@map.route("/mapstart", methods=["POST"])
 def primary_entities():
     db = "C:/Users/Jeevs/ccm-backend/app/db.sqlite"
     try:
@@ -92,8 +92,10 @@ def primary_entities():
         cursor.execute("SELECT id FROM reporting_entity WHERE primary_display = 1")
         rows = cursor.fetchall()
         print(rows)
+        lst = []
         for row in rows:
             print(row[0])
+            lst.append(row[0])
         cursor.close()
 
     except sqlite3.Error as error:
@@ -103,10 +105,36 @@ def primary_entities():
         if conn:
             conn.close()
             print("The SQLite connection is closed")
-        return jsonify(rows)
+        return jsonify(lst)
 
 
     #with open("C:/Users/Jeevs/ccm-backend/app/geojson/uk.ac.cam.kings.geojson") as f:
         #status = json.load(f)
     
     #return status
+
+@map.route("/mapchild", methods=["POST"])
+def secondary_entities():
+    db = "C:/Users/Jeevs/ccm-backend/app/db.sqlite"
+    try:
+        conn = sqlite3.connect(db)
+        cursor = conn.cursor()
+        print("Connected to SQLite")
+
+        cursor.execute("SELECT id FROM reporting_entity WHERE primary_display = 0")
+        rows = cursor.fetchall()
+        print(rows)
+        lst = []
+        for row in rows:
+            print(row[0])
+            lst.append(row[0])
+        cursor.close()
+
+    except sqlite3.Error as error:
+        print("Failed to update sqlite table", error)
+
+    finally:
+        if conn:
+            conn.close()
+            print("The SQLite connection is closed")
+        return jsonify(lst)

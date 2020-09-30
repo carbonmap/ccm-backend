@@ -1,3 +1,4 @@
+"""
 from flask import Blueprint, render_template, jsonify, request
 import sqlite3
 import os, os.path
@@ -69,6 +70,7 @@ def Move():
 
     return show_files()
 
+
 # function toggles the status the file in the database. Takes two arguments: (1) file_name (2) accept=Boolean. Arg (2) allows the same function to be used for accepting or removing file
 # the function is called the move request.
 def toggle_db(file_name_arg, accept=True):
@@ -92,3 +94,4 @@ def toggle_db(file_name_arg, accept=True):
 # Test queries
 # UPDATE reporting_entity SET status = 'accepted' WHERE id = 'net.theleys';
 # UPDATE reporting_entity SET status = 'submitted' WHERE id = 'net.theleys';
+
