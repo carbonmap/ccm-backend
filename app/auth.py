@@ -18,6 +18,10 @@ from .email import generate_confirmation_token, confirm_token, send_email
 from .decorators import confirm_required
 import uuid
 
+import os
+app_dir = os.path.dirname(os.path.abspath(__file__))
+
+
 auth = Blueprint("auth", __name__)
 
 
@@ -106,7 +110,7 @@ def logout():
 
 @auth.route("/admin", methods=["POST"])
 def admin():
-    db = "C:/Users/Jeevs/ccm-backend/app/db.sqlite"
+    db = f"{app_dir}/db.sqlite"
     table = "user"
     email = request.form.get("email")
     user = User.query.filter_by(email=email).first()

@@ -7,7 +7,8 @@ from .admin import sqliteExecute
 from . import db
 from .profile import my_entities
 
-
+import os
+app_dir = os.path.dirname(os.path.abspath(__file__))
 
 map = Blueprint("map", __name__)
 
@@ -83,7 +84,7 @@ def popup_options():
 
 @map.route("/mapstart", methods=["POST"])
 def primary_entities():
-    db = "C:/Users/Jeevs/ccm-backend/app/db.sqlite"
+    db = f"{app_dir}/db.sqlite"
     try:
         conn = sqlite3.connect(db)
         cursor = conn.cursor()
@@ -108,14 +109,14 @@ def primary_entities():
         return jsonify(lst)
 
 
-    #with open("C:/Users/Jeevs/ccm-backend/app/geojson/uk.ac.cam.kings.geojson") as f:
+    #with open(f"{app_dir}/geojson/uk.ac.cam.kings.geojson") as f:
         #status = json.load(f)
     
     #return status
 
 @map.route("/mapchild", methods=["POST"])
 def secondary_entities():
-    db = "C:/Users/Jeevs/ccm-backend/app/db.sqlite"
+    db = f"{app_dir}/db.sqlite"
     try:
         conn = sqlite3.connect(db)
         cursor = conn.cursor()
