@@ -4,9 +4,13 @@ from flask_mail import Message
 from .decorators import confirm_required
 from .admin import sqliteExecute
 from . import db
+import json
+import os
 
 
 main = Blueprint("main", __name__)
+app_dir = os.path.dirname(os.path.abspath(__file__))
+database_dir = os.path.join(app_dir, "db.sqlite")
 
 
 @main.route("/")
@@ -23,6 +27,78 @@ def admin():
     else:
         return render_template("index.html")
 
+
+def is_sub(entity_id):
+    q = "SELECT primary_display FROM reporting_entity WHERE id = ?"
+    # Comes in as string
+    primary = sqliteExecute(database=database_dir, instruction=q, params=(entity_id,))
+    sub = not bool(int(primary[0][0]))
+
+    return sub
+
+
+def is_approved(entity_id):
+    q = "SELECT status FROM reporting_entity WHERE id = ?"
+    approved = sqliteExecute(database=database_dir, instruction=q, params=(entity_id,))
+    approved = (approved[0][0] == 'accepted')
+    return approved
+
+
+def get_geojson_addr(entity_id):
+    if is_approved(entity_id):
+        root_addr = 'geojson/approved'
+    else:
+        root_addr = 'geojson/not_approved'
+
+    geojson_name = f"{entity_id}.geojson"
+    geojson_path = os.path.join(app_dir, root_addr, geojson_name)
+
+    return geojson_path
+
+
+def get_primary_entity(subentity_id):
+    q = "SELECT entity_id FROM entity_to_subentity WHERE subentity_id = ?"
+    primary_entity = sqliteExecute(database=database_dir, instruction=q, params=(subentity_id,))
+    primary_entity = string(primary_entity)
+    return primary_entity
+
+
+def get_all_subentites(entity_id):
+    q = "SELECT subentity_id FROM entity_to_subentity WHERE entity_id = ?"
+    subentities = sqliteExecute(database=database_dir, instruction=q, params=(entity_id,))
+    return subentities
+
+
+def read_geojson(geojson_addr):
+    with open(geojson_addr, "r") as jfile:
+        jdata = json.load(jfile)
+    return jdata
+
+
+def save_geojson(geojson, geojson_addr):
+    with open(geojson_addr) as jfile:
+        json.dump(geojson, jfile)
+
+
+def reconfig_geojson_subentities(entity_id):
+    geojson_addr = get_geojson_addr(entity_id)
+
+    if is_sub(entity_id):
+        primary_entity_id = get_primary_entity(entity_id)
+        primary_entity_addr = get_geojson_addr(primary_entity_id)
+        primary_entity_geojson = read_geojson(primary_entity_addr)
+        primary_entity_geojson["features"][0]["properties"]["subentities"].append(entity_id)
+        primary_entity_geojson["features"][0]["properties"]["subentities"] = list(set(primary_entity_geojson["features"][0]["properties"]["subentities"]))
+        save_geojson(primary_entity_geojson, primary_entity_addr)
+
+    else:
+        subentities = get_all_subentites(entity_id)
+        entity_geojson = read_geojson(geojson_addr)
+        entity_geojson["features"][0]["properties"]["subentities"] += subentities
+        entity_geojson["features"][0]["properties"]["subentities"] = list(set(entity_geojson["features"][0]["properties"]["subentities"]))
+        save_geojson(entity_geojson, geojson_addr)
+
+    
 
 @main.route("/populate_database_1234")
 def populate_dummy_values():
@@ -143,7 +219,7 @@ def populate_dummy_values():
     queries_list = monster_query.split(";")
 
     for q in queries_list:
-        sqliteExecute(database="db.sqlite", instruction=q, params=())
+        sqliteExecute(database=database_dir, instruction=q, params=())
 
     print("wow")
 

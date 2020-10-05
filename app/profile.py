@@ -3,6 +3,7 @@ from flask_login import login_required, current_user
 from .models import ReportingEntity, EntityToSubentity, UserToEntity
 
 from .admin import sqliteExecute
+from .map import *
 from . import db
 
 
@@ -137,6 +138,8 @@ def add_entity_post():
         )
         db.session.add(new_subentity_for_entity)
         db.session.commit()
+
+    
 
     # What else is required?
     pass
