@@ -80,6 +80,29 @@ def save_geojson(geojson, geojson_addr):
         json.dump(geojson, jfile)
 
 
+def make_fresh_geojson(geojson_addr, entity_id, location):
+
+    fresh_geojson = {
+      "type": "FeatureCollection",
+      "features": [
+        {
+          "type": "Feature",
+          "properties": {
+            "id": entity_id,
+            "subentities": []
+            }
+          "geometry": {
+            "type": "MultiPoint",
+            "coordinates": [location]
+          }
+        }
+      ]
+    }
+
+    with open(geojson_addr) as jfile:
+        json.dump(fresh_geojson, jfile)  
+
+
 def reconfig_geojson_subentities(entity_id):
     geojson_addr = get_geojson_addr(entity_id)
 
