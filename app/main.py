@@ -90,7 +90,7 @@ def make_fresh_geojson(geojson_addr, entity_id, location):
           "properties": {
             "id": entity_id,
             "subentities": []
-            }
+            },
           "geometry": {
             "type": "MultiPoint",
             "coordinates": [location]

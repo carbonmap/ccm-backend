@@ -7,8 +7,8 @@ from . import db
 
 superuser_dashboard = Blueprint("superuser_dashboard", __name__)
 
-limbo_path = "geojson/not_approved"
-confirmed_path = "geojson/approved/"
+limbo_path = "app/geojson/not_approved"
+confirmed_path = "app/geojson/approved/"
 file_name = "some_text.txt"
 
 limbo_list = os.listdir(limbo_path)  # list of all the files limbo folder

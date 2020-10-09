@@ -5,7 +5,7 @@ import sqlite3
 
 from .admin import sqliteExecute
 from . import db
-from .profile import my_entities
+#from .profile import my_entities
 
 import os
 
