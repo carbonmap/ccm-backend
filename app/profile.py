@@ -1,16 +1,10 @@
-from flask import Blueprint, render_template
+import os
+from flask import Blueprint, render_template, jsonify
 from flask_login import login_required, current_user
 from .models import ReportingEntity, EntityToSubentity, UserToEntity
 
-from .admin import sqliteExecute
-from .map import *
-from .main import *
-from . import db
-
-
 profile = Blueprint("profile", __name__)
 app_dir = os.path.dirname(os.path.abspath(__file__))
-
 
 # Final format
 # [
@@ -39,35 +33,37 @@ app_dir = os.path.dirname(os.path.abspath(__file__))
 # ]
 
 
-@profile.route("/entites_full_info")
-@login_required
-def entites_full_info():
-
-    entites = my_entities()  # Send request/just call to my_entities(), get a list of entity ids
+#@profile.route("/entities")
+#@login_required
+#def entities_full_info():
+#
+#    entites = my_entities()  # Send request/just call to my_entities(), get a list of entity ids
 
 
 @profile.route("/my_entities")
 @login_required
 def my_entities():
     user_id = current_user.id
-
+    print('user_id:')
+    print(user_id)
     # [
     #     ("uk.ac.cam.kings", "metadata"),
     #     ("uk.ac.cam.kings.k1", "metadata"),
     #     ("uk.ac.cam.kings.k2", "emissions"),
     #     ("uk.ac.cam.kings.k3", "emissions"),
     # ]
-    user_entities = sqliteExecute(
-        "app/db.sqlite",
-        "SELECT entity_id,role FROM user_to_entity WHERE user_id=?",
-        (user_id,),
-    )
-    return user_entities
-
+    user_entities = UserToEntity.query.filter_by(user_id=user_id).all()
+    print('user_entities:')
+    print(user_entities)
+    #sqliteExecute(
+    #    "app/db.sqlite",
+    #    "SELECT entity_id,role FROM user_to_entity WHERE user_id=?",
+    #    (user_id,),
+    #)
+    return jsonify(user_entities)
 
 @profile.route("/add_entity")
 def add_entity():
-
     return render_template("add_entity.html")
 
 

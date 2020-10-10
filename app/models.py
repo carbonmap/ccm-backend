@@ -1,8 +1,22 @@
+from dataclasses import dataclass
 from flask_login import UserMixin
+from datetime import datetime
 from . import db
 
 
+@dataclass
 class User(UserMixin, db.Model):
+    id: str
+    name: str
+    org: str
+    user_type: str
+    email: str
+    password: str
+    admin: str
+    registered_on: datetime
+    confirmed: str
+    confirmed_on: datetime
+
     id = db.Column(db.String, primary_key=True)
     name = db.Column(db.String(1000))
     org = db.Column(db.String(1000))
@@ -15,7 +29,15 @@ class User(UserMixin, db.Model):
     confirmed_on = db.Column(db.DateTime)
 
 
+@dataclass
 class ReportingEntity(db.Model):
+    id: str
+    name: str
+    primary_display: bool
+    status: str
+    osm_id: str
+    centerpoint: str
+
     id = db.Column(db.String(1000), primary_key=True, nullable=False)
     name = db.Column(db.String(1000), nullable=False)
     primary_display = db.Column(db.Boolean, nullable=False)
@@ -24,7 +46,14 @@ class ReportingEntity(db.Model):
     centerpoint = db.Column(db.String, nullable=True)
 
 
+@dataclass
 class EntityProperty(db.Model):
+    id: str
+    property: str
+    is_numeric: bool
+    numb_value: float
+    str_value: str
+
     # Composite primary key
     id = db.Column(
         db.String(1000),
@@ -38,7 +67,10 @@ class EntityProperty(db.Model):
     str_value = db.Column(db.String, nullable=True)
 
 
+@dataclass
 class EntityToSubentity(db.Model):
+    entity_id: str
+    subentity_id: str
     # Composite primary foreign key
     entity_id = db.Column(
         db.String(1000),
@@ -54,7 +86,11 @@ class EntityToSubentity(db.Model):
     )
 
 
+@dataclass
 class UserToEntity(db.Model):
+    user_id: str
+    entity_id: str
+    role: str
     # Composite primary foreign key
     user_id = db.Column(
         db.String(1000), db.ForeignKey(User.id), nullable=False, primary_key=True
@@ -65,10 +101,12 @@ class UserToEntity(db.Model):
         nullable=False,
         primary_key=True,
     )
-    role = db.Column(db.String(1000), db.ForeignKey(User.id), nullable=False)
+    role = db.Column(db.String(1000), nullable=False)
 
 
+@dataclass
 class SuperUser(db.Model):
+    superuser_id: str
     superuser_id = db.Column(
         db.String(1000), db.ForeignKey(User.id), nullable=False, primary_key=True
     )

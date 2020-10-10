@@ -1,37 +1,26 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_mail import Mail
 from flask_cors import CORS
+from .config import config
 
 db = SQLAlchemy()
 mail = Mail()
 
 LOAD_DUMMY_DATA = True
 
-
-def create_app():
+def create_app(config_name='development'):
     app = Flask(__name__)
+    config[config_name].init_app(app)
+    app.config.from_object(config[config_name])
+
     CORS(app)
 
-    app.config["SECRET_KEY"] = "9OLWxND4o83j4K4iuopO"
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///db.sqlite"
-    app.config["SECURITY_PASSWORD_SALT"] = "my_precious_two"
-    app.config["DEBUG"] = False
-    app.config["BCRYPT_LOG_ROUNDS"] = 13
-    app.config["WTF_CSRF_ENABLED"] = True
-    app.config["DEBUG_TB_ENABLED"] = False
-    app.config["DEBUG_TB_INTERCEPT_REDIRECTS"] = False
-
-    app.config["MAIL_SERVER"] = "smtp.gmail.com"
-    app.config["MAIL_PORT"] = 587
-    app.config["MAIL_USE_TLS"] = True
-    app.config["MAIL_USE_SSL"] = False
-    app.config["MAIL_USERNAME"] = "jeevan.bhoot@gmail.com"
-    app.config["MAIL_PASSWORD"] = "rgitwfupumphtgba"
-    app.config["MAIL_DEFAULT_SENDER"] = "jeevan.bhoot@gmail.com"
-
     db.init_app(app)
+    migrate = Migrate(app, db)
+    
     mail.init_app(app)
 
     login_manager = LoginManager()
@@ -51,7 +40,7 @@ def create_app():
 
     @login_manager.user_loader
     def load_user(user_id):
-        return User.query.get(int(user_id))
+        return User.query.get(user_id)
 
     from .auth import auth as auth_blueprint
     from .main import main as main_blueprint

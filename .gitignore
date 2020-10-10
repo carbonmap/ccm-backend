@@ -1,3 +1,5 @@
+__pycache__
 app/__pycache__
 data_access_functions/__pycache__/
-.gitignore
+venv
+.env
