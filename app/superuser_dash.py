@@ -20,7 +20,7 @@ def super_dash():
     return render_template("super_dash.html")
 
 
-@superuser_dashboard.route("/showfiles")
+@superuser_dashboard.route("/showfiles", methods=["GET", "POST"])
 def show_files():
     limbo_list = os.listdir(limbo_path)
     confirmed_list = os.listdir(confirmed_path)
