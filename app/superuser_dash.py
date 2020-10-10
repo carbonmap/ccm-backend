@@ -6,13 +6,10 @@ from .models import ReportingEntity
 from . import db
 
 superuser_dashboard = Blueprint("superuser_dashboard", __name__)
+app_dir = os.path.dirname(os.path.abspath(__file__))
 
-limbo_path = "app/geojson/not_approved"
-confirmed_path = "app/geojson/approved/"
-file_name = "some_text.txt"
-
-limbo_list = os.listdir(limbo_path)  # list of all the files limbo folder
-confirmed_list = os.listdir(confirmed_path)  # list of all the files limbo folder
+limbo_path = os.path.join(app_dir, "geojson/not_approved")
+confirmed_path = os.path.join(app_dir, "geojson/approved")
 
 
 @superuser_dashboard.route("/superuser_dashboard")

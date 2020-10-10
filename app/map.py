@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request, jsonify
 from flask_login import login_required, current_user
+
 import os
 from .models import ReportingEntity, EntityToSubentity, UserToEntity, EntityProperty
 import dataclasses
@@ -30,6 +31,38 @@ def map_view():
         for subentity in subentities:
             displayed_subentities.append(ReportingEntity.query.filter_by(id=subentity.subentity_id).all())
     return jsonify(primary_entities + displayed_subentities)
+
+
+@map.route("/entity_data", methods=["POST"])
+def entity_data():
+    id = request.json["id"]
+
+    issub = is_sub(id)
+    isapproved = is_approved(id)
+    
+    if isapproved:
+        datajson = read_json(
+            os.path.join(app_dir, "reporting_entities", f"{id}.json")
+        )
+        properties = get_property_json(id)
+    else:
+        datajson = "NOT_APPROVED"
+        properties = None
+    
+    if issub:
+        primary_entity = primary_entities(id)
+        subentities = None
+    else:
+        primary_entity = None
+        subentities = get_all_subentites(id)
+
+    return jsonify(
+        {
+            "data": datajson,
+            "primary_entity": primary_entity,
+            "subentities": subentities,
+        }
+    )
 
 
 @map.route("/popup_options")
@@ -67,13 +100,14 @@ def popup_options():
 @map.route("/mapstart")
 def primary_entities():
     entities = []
-    for entity in ReportingEntity.query.filter_by(primary_display=1).all():
+    for entity in ReportingEntity.query.filter_by(primary_display=1, status='accepted').all():
         entities.append(entity.id)
     return jsonify(entities)
 
 @map.route("/mapchild")
 def secondary_entities():
     entities = []
-    for entity in ReportingEntity.query.filter_by(primary_display=0).all():
+    for entity in ReportingEntity.query.filter_by(primary_display=0, status='accepted').all():
         entities.append(entity.id)
     return jsonify(entities)
+
