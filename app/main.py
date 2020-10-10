@@ -2,16 +2,13 @@ from flask import Blueprint, render_template, current_app, request
 from flask_login import login_required, current_user
 from flask_mail import Message
 from .decorators import confirm_required
-from .admin import sqliteExecute
-from . import db
 import json
 import os
-
+from .models import ReportingEntity, EntityToSubentity
 
 main = Blueprint("main", __name__)
 app_dir = os.path.dirname(os.path.abspath(__file__))
 database_dir = os.path.join(app_dir, "db.sqlite")
-
 
 @main.route("/")
 def index():
@@ -29,20 +26,16 @@ def admin():
 
 
 def is_sub(entity_id):
-    q = "SELECT primary_display FROM reporting_entity WHERE id = ?"
-    # Comes in as string
-    primary = sqliteExecute(database=database_dir, instruction=q, params=(entity_id,))
-    sub = not bool(int(primary[0][0]))
-
-    return sub
-
+    entity = ReportingEntity.query.filter_by(id=entity_id).first()
+    if entity:
+        return entity.primary_display
+    return False
 
 def is_approved(entity_id):
-    q = "SELECT status FROM reporting_entity WHERE id = ?"
-    approved = sqliteExecute(database=database_dir, instruction=q, params=(entity_id,))
-    approved = (approved[0][0] == 'accepted')
-    return approved
-
+    entity = ReportingEntity.query.filter_by(id=entity_id).first()
+    if entity:
+        return entity.status == 'accepted'
+    return False
 
 def get_geojson_addr(entity_id):
     if is_approved(entity_id):
@@ -57,31 +50,25 @@ def get_geojson_addr(entity_id):
 
 
 def get_primary_entity(subentity_id):
-    q = "SELECT entity_id FROM entity_to_subentity WHERE subentity_id = ?"
-    primary_entity = sqliteExecute(database=database_dir, instruction=q, params=(subentity_id,))
-    primary_entity = string(primary_entity)
-    return primary_entity
-
+    e_to_s = ReportingEntity.query.filter_by(subentity_id=subentity_id).first()
+    if e_to_s:
+        return e_to_s.entity_id
+    return None
 
 def get_all_subentites(entity_id):
-    q = "SELECT subentity_id FROM entity_to_subentity WHERE entity_id = ?"
-    subentities = sqliteExecute(database=database_dir, instruction=q, params=(entity_id,))
-    return subentities
-
+    e_to_s = ReportingEntity.query.filter_by(entity_id=entity_id).all()
+    return e_to_s
 
 def read_json(geojson_addr):
     with open(geojson_addr, "r") as jfile:
         jdata = json.load(jfile)
     return jdata
 
-
 def save_json(geojson, geojson_addr):
     with open(geojson_addr) as jfile:
         json.dump(geojson, jfile)
 
-
 def make_fresh_geojson(geojson_addr, entity_id, location):
-
     fresh_geojson = {
       "type": "FeatureCollection",
       "features": [

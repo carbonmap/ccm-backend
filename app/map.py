@@ -1,56 +1,36 @@
 from flask import Blueprint, render_template, request, jsonify
 from flask_login import login_required, current_user
-import json
-import sqlite3
-
-from .admin import sqliteExecute
-from . import db
-from .main import *
-# from .profile import my_entities
 
 import os
+from .models import ReportingEntity, EntityToSubentity, UserToEntity, EntityProperty
+import dataclasses
 
 app_dir = os.path.dirname(os.path.abspath(__file__))
 
 map = Blueprint("map", __name__)
 
-
 @map.route("/map_view")
 def map_view():
-    # TODO: 050920
-    # User will enter a url that looks like:
-    # .../map_view?reveal[]=uk.ac.cam.kings&reveal[]=uk.ac.cam.christs
-
-    # We want to reveal all entities which have primary_display = True (function 1),
+    # We want to reveal all entities which have primary_display = True
     # AND any subentities which belong to the list of top level entities in
-    # the url (function 2 for each of the url arguments)
+    # the url 
 
     # This gets the list of entities from the url:
-    list_of_expanded_entities = request.args.get("reveal[]")
-    # Want this to be a list of strings so for loop below works!!!
-    print(list_of_expanded_entities)
+    list_of_expanded_entities = []
+    if request.args.get("reveal[]") is not None:
+        list_of_expanded_entities = request.args.to_dict(flat=False)['reveal[]']
 
-    primary_entities = sqliteExecute(
-        "app/db.sqlite", "SELECT id FROM reporting_entity WHERE primary_display=1", ()
-    )
-    ### Function 1 on database
-
+    # Get all primary entities
+    primary_entities = ReportingEntity.query.filter_by(primary_display=1).all()
+    
+    # Get subentities of entities passed in params
     displayed_subentities = []
-    for ent in list_of_expanded_entities:
-        displayed_subentities.append(
-            sqliteExecute(
-                "app/db.sqlite",
-                "SELECT subentity_id FROM entity_to_subentity WHERE entity_id=?",
-                (entity_id,),
-            )
-        )
-        ### Function 2 on database for all relevant entities
-
-        # i.e. when the user first enters the map, the will have url .../mapview
-        # This means displayed_subentities is empty and they only return primary_entities
-
-    # Return list of entitiy that combines primary_entities and displayed_subentities
-    return primary_entities + displayed_subentities
+    for entity_id in list_of_expanded_entities:
+        subentities = EntityToSubentity.query.filter_by(entity_id=entity_id).all()
+        print(len(subentities))
+        for subentity in subentities:
+            displayed_subentities.append(ReportingEntity.query.filter_by(id=subentity.subentity_id).all())
+    return jsonify(primary_entities + displayed_subentities)
 
 
 @map.route("/entity_data", methods=["POST"])
@@ -104,93 +84,30 @@ def popup_options():
     # Therefore, you can get the relevant entity with:
     entity_id = request.args.get("entity_id")
 
-    ### Function 6?
-    entity_name = sqliteExecute(
-        "app/db.sqlite", "SELECT name FROM reporting_entity WHERE id=?", (id,)
-    )
+    # Get entity and convert to object
+    entity = dataclasses.asdict(ReportingEntity.query.filter_by(id=entity_id).first())
+    # Get all entity properties
+    entity_property_list = EntityProperty.query.filter_by(id=entity_id).all()
+    editable = False
 
-    ### Function 4 ...... I'm assuming each sqliteExecute makes a list so I can add the two together to make a bigger list
-    entity_meta_data = sqliteExecute(
-        "app/db.sqlite",
-        "SELECT numb_value FROM entity_property WHERE is_numeric=1 AND id=?",
-        (id,),
-    ) + sqliteExecute(
-        "app/db.sqlite",
-        "SELECT string_value FROM entity_properties WHERE is_numeric=0 AND id=?",
-        (id,),
-    )
+    if len(UserToEntity.query.filter_by(user_id=current_user.id, entity_id=entity_id).all()) > 0:
+        editable = True
 
-    ### Function 3 and 5?
-    user_entities = (
-        my_entities
-    )  ### Send a request to .../my_entities which returns a list of entity ids the user has access to, and their permission to each
-    user_permission = None  ### None/"emissions"/"metadata"
-
-    # Return soemthing like this:
-    return {
-        "entity_name": entity_name,
-        "entity_metadata": entity_metadata,
-        "user_permission": user_permission,
-    }
-    # The front end can then receive this and produce a popup with the name and metadata
-
-
-@map.route("/mapstart", methods=["POST"])
+    entity['properties'] = entity_property_list
+    entity['editable'] = editable
+    return entity
+ 
+@map.route("/mapstart")
 def primary_entities():
-    db = f"{app_dir}/db.sqlite"
-    try:
-        conn = sqlite3.connect(db)
-        cursor = conn.cursor()
-        #print("Connected to SQLite")
+    entities = []
+    for entity in ReportingEntity.query.filter_by(primary_display=1, status='accepted').all():
+        entities.append(entity.id)
+    return jsonify(entities)
 
-        cursor.execute("SELECT id FROM reporting_entity WHERE primary_display = 1 AND status = 'accepted'")
-        rows = cursor.fetchall()
-        #print(rows)
-        lst = []
-        for row in rows:
-            #print(row[0])
-            lst.append(row[0])
-        cursor.close()
-
-    except sqlite3.Error as error:
-        print("Failed to update sqlite table", error)
-
-    finally:
-        if conn:
-            conn.close()
-            #print("The SQLite connection is closed")
-        return jsonify(lst)
-
-
-    # with open(f"{app_dir}/geojson/uk.ac.cam.kings.geojson") as f:
-    # status = json.load(f)
-
-    # return status
-
-
-@map.route("/mapchild", methods=["POST"])
+@map.route("/mapchild")
 def secondary_entities():
-    db = f"{app_dir}/db.sqlite"
-    try:
-        conn = sqlite3.connect(db)
-        cursor = conn.cursor()
-        #print("Connected to SQLite")
-
-        cursor.execute("SELECT id FROM reporting_entity WHERE primary_display = 0 AND status = 'accepted'")
-        rows = cursor.fetchall()
-        #print(rows)
-        lst = []
-        for row in rows:
-            #print(row[0])
-            lst.append(row[0])
-        cursor.close()
-
-    except sqlite3.Error as error:
-        print("Failed to update sqlite table", error)
-
-    finally:
-        if conn:
-            conn.close()
-            #print("The SQLite connection is closed")
-        return jsonify(lst)
+    entities = []
+    for entity in ReportingEntity.query.filter_by(primary_display=0, status='accepted').all():
+        entities.append(entity.id)
+    return jsonify(entities)
 

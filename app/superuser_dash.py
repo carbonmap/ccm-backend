@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, jsonify, request
 import sqlite3
 import os, os.path
 import shutil
-from .admin import sqliteExecute
+from .models import ReportingEntity
 from . import db
 
 superuser_dashboard = Blueprint("superuser_dashboard", __name__)
@@ -17,7 +17,7 @@ def super_dash():
     return render_template("super_dash.html")
 
 
-@superuser_dashboard.route("/showfiles", methods=["POST"])
+@superuser_dashboard.route("/showfiles", methods=["GET", "POST"])
 def show_files():
     limbo_list = os.listdir(limbo_path)
     confirmed_list = os.listdir(confirmed_path)
@@ -69,23 +69,15 @@ def Move():
 # the function is called the move request.
 def toggle_db(file_name_arg, accept=True):
 
-    name = file_name_arg.split(".geojson")[0]  # the id in the db is the file name without the geojson extension.
+    # the id in the db is the file name without the geojson extension.
+    entity_id = file_name_arg.split(".geojson")[0]  
     # if moving from limbo to confirmed
+    status = "submitted"
     if accept == True:
-        params = ("accepted", name)
-    # if moving from confirmed to limbo
-    elif accept == False:
-        params = ("submitted", name)
-
-    # Instruction for db accepting params
-    instrct = """
-                UPDATE reporting_entity SET status = ? WHERE id = ?;
-    """
-    sqliteExecute(
-        database=os.path.join(app_dir, "db.sqlite"),
-        instruction=instrct,
-        params=params
-    )
+        status = "accepted"
+    entity = ReportingEntity.query.filter_by(id=entity_id)
+    entity.status = status
+    db.session.commit()
 
     print("Database successfully updated")
 

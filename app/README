@@ -1,16 +1,30 @@
-db.create_all(app=create_app()) in Python REPL to create db and app.
 
-Enter email address in app.config['MAIL_USERNAME'] =  and app.config['MAIL_DEFAULT_SENDER'] = in __init__.py
-Enter email password in app.config['MAIL_PASSWORD'] = in __init__.py
+.env for emails
+MAIL_USERNAME
+MAIL_DEFAULT_SENDER
+MAIL_PASSWORD
 If using a gmail account with two factor authentication, create an 'app password', which bypasses the 2FA process.
 
 Linux:
 export FLASK_APP=app
-export FLASK_DEBUG=1
+export FLASK_ENV=development|production
 
 Windows:
 $env:FLASK_APP = "app"
-$env:FLASK_DEBUG=1
+$env:FLASK_ENV=development
+
+Install all the required modules
+pip install -r requirements.txt
+
+If you add a module, use 
+pip freeze > requirements.txt 
+...to update the list
+
+This may be necessary - CP not sure
+>>> from app import create_app
+>>> from flask_sqlalchemy import SQLAlchemy
+>>> db = SQLAlchemy()
+>>> db.create_all(app=create_app())
 
 Whilst in ccm-backend folder, enter:
 flask run

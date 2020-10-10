@@ -12,7 +12,6 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, logout_user, login_required, current_user
 from .models import User
 from . import db
-from .admin import updateSqliteTable
 import datetime
 from .email import generate_confirmation_token, confirm_token, send_email
 from .decorators import confirm_required
@@ -25,6 +24,11 @@ app_dir = os.path.dirname(os.path.abspath(__file__))
 
 auth = Blueprint("auth", __name__)
 
+def field_from_post(field):
+    if request.headers['Content-Type'] == 'application/json':
+        return request.json[field]
+    else:
+        return request.form.get(field)
 
 @auth.route("/login")
 def login():
@@ -33,8 +37,8 @@ def login():
 
 @auth.route("/login", methods=["POST"])
 def login_post():
-    email = request.json["email"]
-    password = request.json["password"]
+    email = field_from_post("email")
+    password = field_from_post("password")
     # remember = True if request.form.get("remember") else False
 
     user = User.query.filter_by(email=email).first()
@@ -58,11 +62,11 @@ def register():
 
 @auth.route("/register", methods=["POST"])
 def register_post():
-    name = request.json["full_name"]
-    org = request.json["org"]
-    user_type = request.json["user_type"]
-    email = request.json["email"]
-    password = request.json["password"]
+    name = field_from_post("full_name")
+    org = field_from_post("org")
+    user_type = field_from_post("user_type")
+    email = field_from_post("email")
+    password = field_from_post("password")
 
     user = User.query.filter_by(email=email).first()
 
@@ -111,22 +115,22 @@ def logout():
 
 @auth.route("/admin", methods=["POST"])
 def admin():
-    db = f"{app_dir}/db.sqlite"
     table = "user"
     email = request.form.get("email")
     user = User.query.filter_by(email=email).first()
     if user:
         if request.form["action"] == "activate":
-            updateSqliteTable(db, table, email, "Y")
-            flash("Admin privileges successfully added to " + email)
-            return redirect(url_for("auth.admin"))
+            admin_flag = "Y"
         else:
-            updateSqliteTable(db, table, email, "N")
-            flash("Admin privileges successfully removed from " + email)
-            return redirect(url_for("auth.admin"))
+            admin_flag = "N"
+
+        user.admin = admin_flag
+        db.session.commit()
+        flash("Admin privileges set to "+admin_flag+" for " + email)
     else:
         flash("The given email address does not match any accounts")
-        return redirect(url_for("auth.admin"))
+    
+    return redirect(url_for("auth.admin"))
 
 
 @auth.route("/confirm/<token>")
