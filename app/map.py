@@ -5,7 +5,12 @@ import sqlite3
 
 from .admin import sqliteExecute
 from . import db
+<<<<<<< HEAD
 #from .profile import my_entities
+=======
+from .main import *
+# from .profile import my_entities
+>>>>>>> added data request
 
 import os
 
@@ -50,6 +55,38 @@ def map_view():
 
     # Return list of entitiy that combines primary_entities and displayed_subentities
     return primary_entities + displayed_subentities
+
+
+@map.route("/entity_data", methods=["POST"])
+def entity_data():
+    id = request.json["id"]
+
+    issub = is_sub(id)
+    isapproved = is_approved(id)
+    
+    if isapproved:
+        datajson = read_json(
+            os.path.join(app_dir, "reporting_entities", f"{id}.json")
+        )
+        properties = get_property_json(id)
+    else:
+        datajson = "NOT_APPROVED"
+        properties = None
+    
+    if issub:
+        primary_entity = primary_entities(id)
+        subentities = None
+    else:
+        primary_entity = None
+        subentities = get_all_subentites(id)
+
+    return jsonify(
+        {
+            "data": datajson,
+            "primary_entity": primary_entity,
+            "subentities": subentities,
+        }
+    )
 
 
 @map.route("/popup_options")

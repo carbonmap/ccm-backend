@@ -6,13 +6,19 @@ from .admin import sqliteExecute
 from . import db
 
 superuser_dashboard = Blueprint("superuser_dashboard", __name__)
+app_dir = os.path.dirname(os.path.abspath(__file__))
 
+<<<<<<< HEAD
 limbo_path = "app/geojson/not_approved"
 confirmed_path = "app/geojson/approved/"
 file_name = "some_text.txt"
 
 limbo_list = os.listdir(limbo_path)  # list of all the files limbo folder
 confirmed_list = os.listdir(confirmed_path)  # list of all the files limbo folder
+=======
+limbo_path = os.path.join(app_dir, "geojson/not_approved")
+confirmed_path = os.path.join(app_dir, "geojson/approved")
+>>>>>>> added data request
 
 
 @superuser_dashboard.route("/superuser_dashboard")
@@ -72,9 +78,7 @@ def Move():
 # the function is called the move request.
 def toggle_db(file_name_arg, accept=True):
 
-    name = file_name_arg.split(".geojson")[
-        0
-    ]  # the id in the db is the file name without the geojson extension.
+    name = file_name_arg.split(".geojson")[0]  # the id in the db is the file name without the geojson extension.
     # if moving from limbo to confirmed
     if accept == True:
         params = ("accepted", name)
@@ -86,7 +90,11 @@ def toggle_db(file_name_arg, accept=True):
     instrct = """
                 UPDATE reporting_entity SET status = ? WHERE id = ?;
     """
-    sqliteExecute(database="db.sqlite", instruction=instrct, params=params)
+    sqliteExecute(
+        database=os.path.join(app_dir, "db.sqlite"),
+        instruction=instrct,
+        params=params
+    )
 
     print("Database successfully updated")
 

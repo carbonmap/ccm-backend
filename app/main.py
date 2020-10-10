@@ -69,13 +69,13 @@ def get_all_subentites(entity_id):
     return subentities
 
 
-def read_geojson(geojson_addr):
+def read_json(geojson_addr):
     with open(geojson_addr, "r") as jfile:
         jdata = json.load(jfile)
     return jdata
 
 
-def save_geojson(geojson, geojson_addr):
+def save_json(geojson, geojson_addr):
     with open(geojson_addr) as jfile:
         json.dump(geojson, jfile)
 
@@ -90,7 +90,11 @@ def make_fresh_geojson(geojson_addr, entity_id, location):
           "properties": {
             "id": entity_id,
             "subentities": []
+<<<<<<< HEAD
             },
+=======
+            }, 
+>>>>>>> added data request
           "geometry": {
             "type": "MultiPoint",
             "coordinates": [location]
@@ -109,19 +113,30 @@ def reconfig_geojson_subentities(entity_id):
     if is_sub(entity_id):
         primary_entity_id = get_primary_entity(entity_id)
         primary_entity_addr = get_geojson_addr(primary_entity_id)
-        primary_entity_geojson = read_geojson(primary_entity_addr)
+        primary_entity_geojson = read_json(primary_entity_addr)
         primary_entity_geojson["features"][0]["properties"]["subentities"].append(entity_id)
         primary_entity_geojson["features"][0]["properties"]["subentities"] = list(set(primary_entity_geojson["features"][0]["properties"]["subentities"]))
-        save_geojson(primary_entity_geojson, primary_entity_addr)
+        save_json(primary_entity_geojson, primary_entity_addr)
 
     else:
         subentities = get_all_subentites(entity_id)
-        entity_geojson = read_geojson(geojson_addr)
+        entity_geojson = read_json(geojson_addr)
         entity_geojson["features"][0]["properties"]["subentities"] += subentities
         entity_geojson["features"][0]["properties"]["subentities"] = list(set(entity_geojson["features"][0]["properties"]["subentities"]))
-        save_geojson(entity_geojson, geojson_addr)
+        save_json(entity_geojson, geojson_addr)
 
-    
+
+def get_property_json(entity_id):
+    q = "SELECT property, numb_value FROM entity_property WHERE id = ? AND is_numeric = TRUE"
+    numb_values = sqliteExecute(database=database_dir, instruction=q, params=(entity_id,))
+    numb_values = {a[0]: a[1] for a in numb_values}
+
+    q = "SELECT property, numb_value FROM entity_property WHERE id = ? AND is_numeric = TRUE"
+    str_values = sqliteExecute(database=database_dir, instruction=q, params=(entity_id,))
+    str_values = {a[0]: a[1] for a in str_values}
+    numb_values.update(str_values)
+    return numb_values
+
 
 @main.route("/populate_database_1234")
 def populate_dummy_values():
