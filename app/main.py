@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, current_app
+from flask import Blueprint, render_template, current_app, request
 from flask_login import login_required, current_user
 from flask_mail import Message
 from .decorators import confirm_required
@@ -247,3 +247,23 @@ def populate_dummy_values():
     print("wow")
 
     return "Hi there"
+
+@main.route("/data", methods=["POST"])
+def get_data():
+    entity_id = request.json["id"]
+
+    with open(f"{app_dir}/geojson/approved/{entity_id}.geojson") as f:
+        status = json.load(f)
+
+    return status
+
+@main.route("/json", methods=["POST"])
+def get_json():
+    entity_id = request.json["ent_id"]
+    print(entity_id)
+
+    with open(f"{app_dir}/reporting_entities/{entity_id}.json") as f:
+        status = json.load(f)
+
+    print(status)
+    return status

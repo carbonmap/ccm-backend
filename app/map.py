@@ -108,14 +108,14 @@ def primary_entities():
     try:
         conn = sqlite3.connect(db)
         cursor = conn.cursor()
-        print("Connected to SQLite")
+        #print("Connected to SQLite")
 
-        cursor.execute("SELECT id FROM reporting_entity WHERE primary_display = 1")
+        cursor.execute("SELECT id FROM reporting_entity WHERE primary_display = 1 AND status = 'accepted'")
         rows = cursor.fetchall()
-        print(rows)
+        #print(rows)
         lst = []
         for row in rows:
-            print(row[0])
+            #print(row[0])
             lst.append(row[0])
         cursor.close()
 
@@ -125,8 +125,9 @@ def primary_entities():
     finally:
         if conn:
             conn.close()
-            print("The SQLite connection is closed")
+            #print("The SQLite connection is closed")
         return jsonify(lst)
+
 
     # with open(f"{app_dir}/geojson/uk.ac.cam.kings.geojson") as f:
     # status = json.load(f)
@@ -140,14 +141,14 @@ def secondary_entities():
     try:
         conn = sqlite3.connect(db)
         cursor = conn.cursor()
-        print("Connected to SQLite")
+        #print("Connected to SQLite")
 
-        cursor.execute("SELECT id FROM reporting_entity WHERE primary_display = 0")
+        cursor.execute("SELECT id FROM reporting_entity WHERE primary_display = 0 AND status = 'accepted'")
         rows = cursor.fetchall()
-        print(rows)
+        #print(rows)
         lst = []
         for row in rows:
-            print(row[0])
+            #print(row[0])
             lst.append(row[0])
         cursor.close()
 
@@ -157,5 +158,6 @@ def secondary_entities():
     finally:
         if conn:
             conn.close()
-            print("The SQLite connection is closed")
+            #print("The SQLite connection is closed")
         return jsonify(lst)
+
