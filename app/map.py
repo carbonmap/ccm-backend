@@ -5,12 +5,8 @@ import sqlite3
 
 from .admin import sqliteExecute
 from . import db
-<<<<<<< HEAD
-#from .profile import my_entities
-=======
 from .main import *
 # from .profile import my_entities
->>>>>>> added data request
 
 import os
 
