@@ -18,9 +18,9 @@ class User(UserMixin, db.Model):
     confirmed_on: datetime
 
     id = db.Column(db.String(40), primary_key=True)
-    name = db.Column(db.String(1000))
-    org = db.Column(db.String(1000))
-    user_type = db.Column(db.String(1000))
+    name = db.Column(db.String(500))
+    org = db.Column(db.String(500))
+    user_type = db.Column(db.String(500))
     email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(100))
     admin = db.Column(db.String(100))
@@ -38,8 +38,8 @@ class ReportingEntity(db.Model):
     osm_id: str
     centerpoint: str
 
-    id = db.Column(db.String(1000), primary_key=True, nullable=False)
-    name = db.Column(db.String(1000), nullable=False)
+    id = db.Column(db.String(500), primary_key=True, nullable=False)
+    name = db.Column(db.String(500), nullable=False)
     primary_display = db.Column(db.Boolean, nullable=False)
     status = db.Column(db.String(100), nullable=False)
     osm_id = db.Column(db.String(100), nullable=True)
@@ -61,10 +61,10 @@ class EntityProperty(db.Model):
         nullable=False,
         primary_key=True,
     )
-    property = db.Column(db.String(1000), nullable=False, primary_key=True)
+    property = db.Column(db.String(500), nullable=False, primary_key=True)
     is_numeric = db.Column(db.Boolean, nullable=False)
     numb_value = db.Column(db.Float, nullable=True)
-    str_value = db.Column(db.String(1000), nullable=True)
+    str_value = db.Column(db.String(500), nullable=True)
 
 
 @dataclass
@@ -101,7 +101,7 @@ class UserToEntity(db.Model):
         nullable=False,
         primary_key=True,
     )
-    role = db.Column(db.String(1000), nullable=False)
+    role = db.Column(db.String(500), nullable=False)
 
 
 @dataclass
