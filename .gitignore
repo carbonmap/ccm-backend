@@ -3,3 +3,5 @@ app/__pycache__
 data_access_functions/__pycache__/
 venv
 .env
+logging.cfg
+log/

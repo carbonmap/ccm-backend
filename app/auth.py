@@ -16,8 +16,9 @@ import datetime
 from .email import generate_confirmation_token, confirm_token, send_email
 from .decorators import confirm_required
 import uuid
-
+import logging
 import os
+import sys
 
 app_dir = os.path.dirname(os.path.abspath(__file__))
 
@@ -44,13 +45,16 @@ def login_post():
     user = User.query.filter_by(email=email).first()
 
     if not user or not check_password_hash(user.password, password):
+        logging.info('Login failed')
         # flash("Invalid email address or password.")
         # return redirect(url_for("auth.login"))
+
         status = False
         return jsonify({"result": status})
 
     login_user(user)
-    # session['logged_in'] = True
+    #session['logged_in'] = True
+    logging.info('Login succeeded')
     status = True
     return jsonify({"result": status})
 
@@ -96,7 +100,11 @@ def register_post():
     confirm_url = url_for("auth.confirm_email", token=token, _external=True)
     html = render_template("activate.html", confirm_url=confirm_url)
     subject = "Please confirm your email"
-    send_email(new_user.email, subject, html)
+    try:
+        send_email(new_user.email, subject, html)
+    except:
+        e = sys.exc_info()[0]
+        logging.error(e)
 
     login_user(new_user)
 
