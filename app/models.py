@@ -41,9 +41,9 @@ class ReportingEntity(db.Model):
     id = db.Column(db.String(1000), primary_key=True, nullable=False)
     name = db.Column(db.String(1000), nullable=False)
     primary_display = db.Column(db.Boolean, nullable=False)
-    status = db.Column(db.String, nullable=False)
-    osm_id = db.Column(db.String, nullable=True)
-    centerpoint = db.Column(db.String, nullable=True)
+    status = db.Column(db.String(100), nullable=False)
+    osm_id = db.Column(db.String(100), nullable=True)
+    centerpoint = db.Column(db.String(20), nullable=True)
 
 
 @dataclass
@@ -64,7 +64,7 @@ class EntityProperty(db.Model):
     property = db.Column(db.String(1000), nullable=False, primary_key=True)
     is_numeric = db.Column(db.Boolean, nullable=False)
     numb_value = db.Column(db.Float, nullable=True)
-    str_value = db.Column(db.String, nullable=True)
+    str_value = db.Column(db.String(1000), nullable=True)
 
 
 @dataclass
