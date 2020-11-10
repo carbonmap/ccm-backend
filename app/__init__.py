@@ -5,6 +5,11 @@ from flask_login import LoginManager
 from flask_mail import Mail
 from flask_cors import CORS
 from .config import config
+from logging.config import fileConfig
+from os import path
+
+log_file_path = path.join(path.dirname(path.abspath(__file__)), 'logging.cfg')
+fileConfig(log_file_path)
 
 db = SQLAlchemy()
 mail = Mail()
