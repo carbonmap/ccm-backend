@@ -9,5 +9,5 @@ logging.basicConfig(stream=sys.stderr)
 
 sys.path.insert(0,"/var/www/app.cambridgecarbonmap.org/")
 
-from app import create_app()
+from app import create_app
 application = create_app('production')
