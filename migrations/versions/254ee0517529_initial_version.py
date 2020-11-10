@@ -1,8 +1,8 @@
 """Initial version
 
-Revision ID: e36474addadc
+Revision ID: 254ee0517529
 Revises: 
-Create Date: 2020-11-10 22:39:27.941666
+Create Date: 2020-11-10 22:42:28.213799
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'e36474addadc'
+revision = '254ee0517529'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -22,9 +22,9 @@ def upgrade():
     sa.Column('id', sa.String(length=1000), nullable=False),
     sa.Column('name', sa.String(length=1000), nullable=False),
     sa.Column('primary_display', sa.Boolean(), nullable=False),
-    sa.Column('status', sa.String(), nullable=False),
-    sa.Column('osm_id', sa.String(), nullable=True),
-    sa.Column('centerpoint', sa.String(), nullable=True),
+    sa.Column('status', sa.String(length=100), nullable=False),
+    sa.Column('osm_id', sa.String(length=100), nullable=True),
+    sa.Column('centerpoint', sa.String(length=20), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('user',
@@ -46,7 +46,7 @@ def upgrade():
     sa.Column('property', sa.String(length=1000), nullable=False),
     sa.Column('is_numeric', sa.Boolean(), nullable=False),
     sa.Column('numb_value', sa.Float(), nullable=True),
-    sa.Column('str_value', sa.String(), nullable=True),
+    sa.Column('str_value', sa.String(length=1000), nullable=True),
     sa.ForeignKeyConstraint(['id'], ['reporting_entity.id'], ),
     sa.PrimaryKeyConstraint('id', 'property')
     )
