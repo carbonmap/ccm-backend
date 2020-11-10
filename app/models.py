@@ -56,7 +56,7 @@ class EntityProperty(db.Model):
 
     # Composite primary key
     id = db.Column(
-        db.String(1000),
+        db.String(500),
         db.ForeignKey(ReportingEntity.id),
         nullable=False,
         primary_key=True,
@@ -73,13 +73,13 @@ class EntityToSubentity(db.Model):
     subentity_id: str
     # Composite primary foreign key
     entity_id = db.Column(
-        db.String(1000),
+        db.String(500),
         db.ForeignKey(ReportingEntity.id),
         nullable=False,
         primary_key=True,
     )
     subentity_id = db.Column(
-        db.String(1000),
+        db.String(500),
         db.ForeignKey(ReportingEntity.id),
         nullable=False,
         primary_key=True,
@@ -96,7 +96,7 @@ class UserToEntity(db.Model):
         db.String(40), db.ForeignKey(User.id), nullable=False, primary_key=True
     )
     entity_id = db.Column(
-        db.String(1000),
+        db.String(500),
         db.ForeignKey(ReportingEntity.id),
         nullable=False,
         primary_key=True,

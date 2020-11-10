@@ -1,8 +1,8 @@
 """Initial version
 
-Revision ID: 49c6558bafa7
+Revision ID: 084c8723eee9
 Revises: 
-Create Date: 2020-11-10 23:05:42.743024
+Create Date: 2020-11-10 23:08:59.085604
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '49c6558bafa7'
+revision = '084c8723eee9'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -42,7 +42,7 @@ def upgrade():
     sa.UniqueConstraint('email')
     )
     op.create_table('entity_property',
-    sa.Column('id', sa.String(length=1000), nullable=False),
+    sa.Column('id', sa.String(length=500), nullable=False),
     sa.Column('property', sa.String(length=500), nullable=False),
     sa.Column('is_numeric', sa.Boolean(), nullable=False),
     sa.Column('numb_value', sa.Float(), nullable=True),
@@ -51,8 +51,8 @@ def upgrade():
     sa.PrimaryKeyConstraint('id', 'property')
     )
     op.create_table('entity_to_subentity',
-    sa.Column('entity_id', sa.String(length=1000), nullable=False),
-    sa.Column('subentity_id', sa.String(length=1000), nullable=False),
+    sa.Column('entity_id', sa.String(length=500), nullable=False),
+    sa.Column('subentity_id', sa.String(length=500), nullable=False),
     sa.ForeignKeyConstraint(['entity_id'], ['reporting_entity.id'], ),
     sa.ForeignKeyConstraint(['subentity_id'], ['reporting_entity.id'], ),
     sa.PrimaryKeyConstraint('entity_id', 'subentity_id')
@@ -64,7 +64,7 @@ def upgrade():
     )
     op.create_table('user_to_entity',
     sa.Column('user_id', sa.String(length=40), nullable=False),
-    sa.Column('entity_id', sa.String(length=1000), nullable=False),
+    sa.Column('entity_id', sa.String(length=500), nullable=False),
     sa.Column('role', sa.String(length=500), nullable=False),
     sa.ForeignKeyConstraint(['entity_id'], ['reporting_entity.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
