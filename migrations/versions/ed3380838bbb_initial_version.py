@@ -1,8 +1,8 @@
-"""empty message
+"""Initial version
 
-Revision ID: e3a94c32f336
+Revision ID: ed3380838bbb
 Revises: 
-Create Date: 2020-11-10 22:09:37.443335
+Create Date: 2020-11-10 22:36:33.150496
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'e3a94c32f336'
+revision = 'ed3380838bbb'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -28,7 +28,7 @@ def upgrade():
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('user',
-    sa.Column('id', sa.String(), nullable=False),
+    sa.Column('id', sa.String(length=40), nullable=False),
     sa.Column('name', sa.String(length=1000), nullable=True),
     sa.Column('org', sa.String(length=1000), nullable=True),
     sa.Column('user_type', sa.String(length=1000), nullable=True),
@@ -58,12 +58,12 @@ def upgrade():
     sa.PrimaryKeyConstraint('entity_id', 'subentity_id')
     )
     op.create_table('super_user',
-    sa.Column('superuser_id', sa.String(length=1000), nullable=False),
+    sa.Column('superuser_id', sa.String(length=40), nullable=False),
     sa.ForeignKeyConstraint(['superuser_id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('superuser_id')
     )
     op.create_table('user_to_entity',
-    sa.Column('user_id', sa.String(length=1000), nullable=False),
+    sa.Column('user_id', sa.String(length=40), nullable=False),
     sa.Column('entity_id', sa.String(length=1000), nullable=False),
     sa.Column('role', sa.String(length=1000), nullable=False),
     sa.ForeignKeyConstraint(['entity_id'], ['reporting_entity.id'], ),

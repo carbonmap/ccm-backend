@@ -17,7 +17,7 @@ class User(UserMixin, db.Model):
     confirmed: str
     confirmed_on: datetime
 
-    id = db.Column(db.String, primary_key=True)
+    id = db.Column(db.String(40), primary_key=True)
     name = db.Column(db.String(1000))
     org = db.Column(db.String(1000))
     user_type = db.Column(db.String(1000))
@@ -93,7 +93,7 @@ class UserToEntity(db.Model):
     role: str
     # Composite primary foreign key
     user_id = db.Column(
-        db.String(1000), db.ForeignKey(User.id), nullable=False, primary_key=True
+        db.String(40), db.ForeignKey(User.id), nullable=False, primary_key=True
     )
     entity_id = db.Column(
         db.String(1000),
@@ -108,5 +108,5 @@ class UserToEntity(db.Model):
 class SuperUser(db.Model):
     superuser_id: str
     superuser_id = db.Column(
-        db.String(1000), db.ForeignKey(User.id), nullable=False, primary_key=True
+        db.String(40), db.ForeignKey(User.id), nullable=False, primary_key=True
     )
