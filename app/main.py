@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, current_app, request
+from flask import Blueprint, render_template, current_app, request, Response
 from flask_login import login_required, current_user
 from flask_mail import Message
 from .decorators import confirm_required
@@ -14,6 +14,12 @@ database_dir = os.path.join(app_dir, "db.sqlite")
 def index():
     return render_template("index.html")
 
+# LetsEncrypt
+@main.route("/.well-known/acme-challenge/<challenge>")
+def letsencrypt_check(challenge):
+    if challenge == current_app.config["LETSENCRYPT_CHALLENGE"]:
+        return Response(current_app.config["LETSENCRYPT_RESPONSE"], mimetype="text/plain")
+    return Response("Error", mimetype="text/plain")
 
 @main.route("/admin")
 @login_required
