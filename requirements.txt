@@ -9,4 +9,3 @@ werkzeug
 datetime
 itsdangerous
 dataclasses
-mysqlclient
