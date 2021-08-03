@@ -1,3 +1,9 @@
+## Setup local environment
+
+Create a .env file from .env-sample
+
+Create a app/logging.cfg file from app/logging.cfg.stdout
+
 ## Running with Docker
 
 ### Build Docker Image
